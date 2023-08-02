@@ -1,7 +1,7 @@
 <script>
 	import '../app.css';
 	/** @type {import('./$types').LayoutData} */
-	export let data;
+	// export let data;
 </script>
 
 <svlete:head>
