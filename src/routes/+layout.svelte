@@ -1,5 +1,6 @@
 <script>
 	import '../app.css';
+	import { Toaster } from 'svelte-sonner';
 	/** @type {import('./$types').LayoutData} */
 	// export let data;
 </script>
@@ -9,3 +10,4 @@
 </svlete:head>
 
 <slot />
+<Toaster richColors />
