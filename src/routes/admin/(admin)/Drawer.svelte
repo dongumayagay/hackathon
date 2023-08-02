@@ -6,7 +6,7 @@
 			<slot name="page_content" />
 		</main>
 	</div>
-	<div class="drawer-side">
+	<div class="drawer-side z-10">
 		<label for="admin-drawer" class="drawer-overlay" />
 		<slot name="sidebar" />
 	</div>

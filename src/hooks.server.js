@@ -1,4 +1,5 @@
 import { auth_admin } from '$lib/firebase/admin.server';
+import { error } from '@sveltejs/kit';
 
 /** @type {import('@sveltejs/kit').Handle} */
 export async function handle({ event, resolve }) {
@@ -6,9 +7,14 @@ export async function handle({ event, resolve }) {
 		const sessionCookie = event.cookies.get('__session');
 		if (!sessionCookie) throw new Error();
 		const decodedClaims = await auth_admin.verifySessionCookie(sessionCookie);
-		event.locals.user_id = decodedClaims.uid;
+		event.locals.claims = decodedClaims;
 	} catch (e) {
-		event.locals.user_id = null;
+		event.locals.claims = null;
+	}
+
+	if (event.url.pathname.startsWith('/admin')) {
+		if (!event.locals.claims) throw error(401, 'Unauthorized');
+		if (event.locals.claims?.admin !== true) throw error(403, 'Forbidden');
 	}
 
 	return resolve(event);
