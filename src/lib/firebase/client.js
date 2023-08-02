@@ -1,7 +1,16 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
-import { getAuth, setPersistence, inMemoryPersistence } from 'firebase/auth';
+import {
+	getAuth,
+	setPersistence,
+	inMemoryPersistence,
+	GoogleAuthProvider,
+	getIdToken,
+	signInWithPopup,
+	signOut
+} from 'firebase/auth';
+import { invalidateAll } from '$app/navigation';
 // import { getAnalytics } from 'firebase/analytics';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -24,3 +33,16 @@ export const app = initializeApp(firebaseConfig, 'CLIENT');
 export const db = getFirestore(app);
 export const auth = getAuth(app);
 setPersistence(auth, inMemoryPersistence);
+
+export async function google_signin() {
+	const credential = await signInWithPopup(auth, new GoogleAuthProvider());
+	const idToken = await getIdToken(credential.user);
+	await fetch(`/api/auth?idToken=${idToken}`, { method: 'POST' });
+	await signOut(auth);
+	await invalidateAll();
+}
+
+export async function sign_out() {
+	await fetch('/api/auth', { method: 'DELETE' });
+	await invalidateAll();
+}
