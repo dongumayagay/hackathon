@@ -34,9 +34,9 @@
 			</ul>
 		</div> -->
 	</div>
-	<!-- <div class="navbar-center">
-		<a href="/" class="btn btn-ghost normal-case text-xl">daisyUI</a>
-	</div> -->
+	<div class="navbar-center">
+		<a href="/" class="btn btn-ghost normal-case text-xl">CyberSentries</a>
+	</div>
 	<div class="navbar-end">
 		<!-- <button class="btn" on:click={google_signin} class:hidden={!!$page.data.user}>
 			<img src="/google.png" alt="google icon" class="h-6 w-6" />

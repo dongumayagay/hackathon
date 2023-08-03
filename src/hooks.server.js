@@ -1,5 +1,5 @@
 import { auth_admin } from '$lib/firebase/admin.server';
-import { error } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 
 /** @type {import('@sveltejs/kit').Handle} */
 export async function handle({ event, resolve }) {
@@ -13,6 +13,9 @@ export async function handle({ event, resolve }) {
 		event.locals.claims = null;
 		event.locals.user = null;
 	}
+
+	if (event.url.pathname === '/' && event.locals.user) throw redirect(303, '/game');
+	if (event.url.pathname.startsWith('/game') && !event.locals.user) throw redirect(303, '/');
 
 	if (event.url.pathname.startsWith('/admin')) {
 		if (!event.locals.claims) throw error(401, 'Unauthorized');

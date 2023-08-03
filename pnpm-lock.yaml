@@ -4,7 +4,7 @@ specifiers:
   '@sveltejs/adapter-auto': ^2.1.0
   '@sveltejs/kit': ^1.22.4
   autoprefixer: ^10.4.14
-  daisyui: ^3.5.0
+  daisyui: ^3.5.1
   eslint: ^8.46.0
   eslint-config-prettier: ^8.10.0
   eslint-plugin-svelte: ^2.32.4
@@ -29,7 +29,7 @@ devDependencies:
   '@sveltejs/adapter-auto': 2.1.0_@sveltejs+kit@1.22.4
   '@sveltejs/kit': 1.22.4_svelte@4.1.2+vite@4.4.8
   autoprefixer: 10.4.14_postcss@8.4.27
-  daisyui: 3.5.0
+  daisyui: 3.5.1
   eslint: 8.46.0
   eslint-config-prettier: 8.10.0_eslint@8.46.0
   eslint-plugin-svelte: 2.32.4_eslint@8.46.0+svelte@4.1.2
@@ -1408,7 +1408,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001519
-      electron-to-chromium: 1.4.482
+      electron-to-chromium: 1.4.483
       node-releases: 2.0.13
       update-browserslist-db: 1.0.11_browserslist@4.21.10
     dev: true
@@ -1561,8 +1561,8 @@ packages:
     hasBin: true
     dev: true
 
-  /daisyui/3.5.0:
-    resolution: {integrity: sha512-wSaeXwaYdMv4yURv9wj7kKQQN9Jyumfh/skIpZfCNkCb2jLf/so+iNKSM8l4rDN0TRvB5OccMlAvsf2UAtk2gg==}
+  /daisyui/3.5.1:
+    resolution: {integrity: sha512-7GG+9QXnr2qQMCqnyFU8TxpaOYJigXiEtmzoivmiiZZHvxqIwYdaMAkgivqTVxEgy3Hot3m1suzZjmt1zUrvmA==}
     engines: {node: '>=16.9.0'}
     dependencies:
       colord: 2.9.3
@@ -1637,8 +1637,8 @@ packages:
       safe-buffer: 5.2.1
     dev: false
 
-  /electron-to-chromium/1.4.482:
-    resolution: {integrity: sha512-h+UqpfmEr1Qkk0zp7ej/jid7CXoq4m4QzW6wNTb0ELJ/BZCpA4wgUylBIMGCe621tnr4l5VmoHjdoSx2lbnNJA==}
+  /electron-to-chromium/1.4.483:
+    resolution: {integrity: sha512-YLwU0iF//9R3cCEfq0wgL+pf9vglE4kwAg4S5tkVVZljUDKv7Wcz67mTY4OOj+T7YUbTGuqlbqgdl/s+7Q8KTw==}
     dev: true
 
   /emoji-regex/8.0.0:
@@ -3175,8 +3175,8 @@ packages:
     dependencies:
       glob: 7.2.3
 
-  /rollup/3.27.0:
-    resolution: {integrity: sha512-aOltLCrYZ0FhJDm7fCqwTjIUEVjWjcydKBV/Zeid6Mn8BWgDCUBBWT5beM5ieForYNo/1ZHuGJdka26kvQ3Gzg==}
+  /rollup/3.27.1:
+    resolution: {integrity: sha512-tXNDFwOkN6C2w5Blj1g6ForKeFw6c1mDu5jxoeDO3/pmYjgt+8yvIFjKzH5FQUq70OKZBkOt0zzv0THXL7vwzQ==}
     engines: {node: '>=14.18.0', npm: '>=8.0.0'}
     hasBin: true
     optionalDependencies:
@@ -3690,7 +3690,7 @@ packages:
     dependencies:
       esbuild: 0.18.17
       postcss: 8.4.27
-      rollup: 3.27.0
+      rollup: 3.27.1
     optionalDependencies:
       fsevents: 2.3.2
     dev: true
