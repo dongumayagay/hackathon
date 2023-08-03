@@ -8,6 +8,6 @@ export async function GET() {
 
 /** @type {import('./$types').RequestHandler} */
 export async function POST({ params }) {
-	deleteDoc(doc(db, `players/${params.uid}`));
+	await deleteDoc(doc(db, `players/${params.uid}`));
 	return new Response('deleted');
 }

@@ -1,7 +1,7 @@
 <script>
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
-	import { db } from '$lib/firebase/client';
+	import { addPlayer, db } from '$lib/firebase/client';
 	import { collection, doc, setDoc } from 'firebase/firestore';
 	import { toast } from 'svelte-sonner';
 
@@ -18,14 +18,9 @@
 					which_player_turn: null,
 					winner: null
 				}),
-				setDoc(doc(db, `players/${$page.data.user.uid}`), {
-					game_id,
-					photoURL: $page.data.user.photoURL,
-					displayName: $page.data.user.displayName
-				})
+				addPlayer($page.data.user, game_id)
 			]);
 
-			console.log('test');
 			await goto(`/game/${game_id}`);
 		} catch (e) {
 			console.error(e);
