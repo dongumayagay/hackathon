@@ -35,9 +35,9 @@
 	});
 </script>
 
-<main style="height:100dvh;" class=" ">
+<div style="height:100dvh;" class=" ">
 	<header class="flex p-4 justify-between w-full">
 		<GameId />
 		<QuitGame />
 	</header>
-</main>
+</div>

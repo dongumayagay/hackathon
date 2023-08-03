@@ -4,10 +4,11 @@ import { error, redirect } from '@sveltejs/kit';
 import { getDoc, getDocs, query, where } from 'firebase/firestore';
 
 /** @type {import('./$types').PageServerLoad} */
-export async function load({ locals, cookies }) {
+export async function load({ locals, cookies, url }) {
 	if (!locals.user) throw error(401, 'sign in required');
 
-	const game_id = cookies.get('game_id');
+	let game_id = url.searchParams.get('game_id');
+	game_id = cookies.get('game_id') ?? null;
 
 	if (!game_id) return {};
 
