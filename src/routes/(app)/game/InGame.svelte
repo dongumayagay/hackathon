@@ -9,6 +9,7 @@
 	import { toast } from 'svelte-sonner';
 	import Player from './Player.svelte';
 	import ShowCards from './ShowCards.svelte';
+	import TestAttack from './TestAttack.svelte';
 
 	$: players = $page.data.players;
 
@@ -83,13 +84,13 @@
 				{JSON.stringify(players, null, 2)}
 			</pre> -->
 			<Player player={players[enemy_index]} is_user={false} />
-			<form action="?/attack" method="POST" use:enhance>
-				<input type="hidden" name="to" value={players[enemy_index].id} />
-				<input type="hidden" name="from" value={players[player_index].id} />
-				<input type="hidden" name="damage" value="2" />
-				<input type="hidden" name="cost" value="1" />
-				<button class="btn" disabled={players[player_index].mp <= 0}>attack</button>
-			</form>
+			<TestAttack
+				bind:mp={players[player_index].mp}
+				to={players[enemy_index].id}
+				from={players[player_index].id}
+				damage={2}
+				cost={1}
+			/>
 			<Player player={players[player_index]} is_user={true}>
 				<ShowCards />
 			</Player>
