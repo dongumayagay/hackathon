@@ -12,6 +12,12 @@
 	 */
 	let players = [];
 
+	async function leave_game() {
+		await updateDoc(doc(db, `game/${$page.params.id}`), {
+			players: arrayRemove($page.data.user.uid)
+		});
+	}
+
 	onMount(() => {
 		/** @type {import('firebase/firestore').Unsubscribe}*/
 		let unsub;
@@ -30,13 +36,20 @@
 
 		game_set();
 
-		return async () => {
-			await updateDoc(doc(db, `game/${$page.params.id}`), {
-				players: arrayRemove($page.data.user.uid)
-			});
+		return () => {
+			leave_game();
 		};
 	});
 </script>
+
+<svelte:window
+	on:beforeunload={async (e) => {
+		await leave_game();
+		e.preventDefault();
+		e.returnValue = '';
+		return '...';
+	}}
+/>
 
 Game ID: {$page.params.id}
 
