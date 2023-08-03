@@ -1,0 +1,184 @@
+{
+    "card" : [ 
+        {
+            "id" : 1,
+            "type" : "threat card",
+            "name" : "Malware Outbreak",
+            "Threat Level" : 3,
+            "CPU Power" : 2,
+            "image" : "M_O_Card.png",
+            "description" : "Widespread harmful software infecting multiple devices and systems."
+        },
+        {
+            "id" : 2,
+            "type" : "threat card",
+            "name" : "Phishing Campaign",
+            "Threat Level" : 2,
+            "CPU Power" : 1,
+            "image" : "P_C_Card.png",
+            "description" : "Email scam impersonating trusted entities to steal personal information and sensitive data."
+        },
+        {
+            "id" : 3,
+            "type" : "threat card",
+            "name" : "DDoS (Distributed Denial of Service) Attack",
+            "Threat Level" : 4,
+            "CPU Power" : 3,
+            "image" : "DDoS_Card.png",
+            "description" : "Overwhelm server with traffic, blocking user access to online services and sites."
+        },
+        {
+            "id" : 4,
+            "type" : "threat card",
+            "name" : "Ransomware",
+            "Threat Level" : 5,
+            "CPU Power" : 4,
+            "image" : "R_W_Card.png",
+            "description" : "Malware demanding payment for system or file access; locks users' data until ransom paid."
+        },
+        {
+            "id" : 5,
+            "type" : "threat card",
+            "name" : "Insider Threat",
+            "Threat Level" : 3,
+            "CPU Power" : 2,
+            "image" : "I_T_Card.png",
+            "description" : "A stealthy risk originating from within, whether deliberate or accidental."
+        },
+        {
+            "id" : 6,
+            "type" : "threat card",
+            "name" : "Brute Force Attack",
+            "Threat Level" : 2,
+            "CPU Power" : 1,
+            "image" : "B_F_A_Card.png",
+            "description" : "Trial and error method to crack passwords and gain unauthorized access to systems."
+        },
+        {
+            "id" : 7,
+            "type" : "threat card",
+            "name" : "Zero-Day Exploit",
+            "Threat Level" : 4,
+            "CPU Power" : 3,
+            "image" : "Z_D_E_Card.png",
+            "description" : "A just-discovered security flaw exploited by hackers before developers can address it."
+        },
+        {
+            "id" : 8,
+            "type" : "threat card",
+            "name" : "Social Engineering",
+            "Threat Level" : 2,
+            "CPU Power" : 1,
+            "image" : "S_E_Card.png",
+            "description" : "Deceptive tactics to manipulate individuals into divulging information or taking unauthorized actions."
+        },
+        {
+            "id" : 9,
+            "type" : "threat card",
+            "name" : "Trojan Horse",
+            "Threat Level" : 3,
+            "CPU Power" : 2,
+            "image" : "T_H_Card.png",
+            "description" : "Malicious software disguised as legit program to gain system access through social engineering."
+        },
+        {
+            "id" : 10,
+            "type" : "security card",
+            "name" : "Firewall",
+            "Security Level" : 3,
+            "CPU Power" : 2,
+            "image" : "F_W_Card.png",
+            "description" : "Network security device filtering traffic based on established policies between private network and Internet."
+        },
+        {
+            "id" : 11,
+            "type" : "security card",
+            "name" : "Antivirus Software",
+            "Security Level" : 2,
+            "CPU Power" : 1,
+            "image" : "A_V_Card.png",
+            "description" : "Protects, scans, detects, and removes computer viruses; offers real-time defense against attacks."
+        },
+        {
+            "id" : 12,
+            "type" : "security card",
+            "name" : "Encryption",
+            "Security Level" : 2,
+            "CPU Power" : 1,
+            "image" : "E_N_Card.png",
+            "description" : "Data scrambling for authorized understanding; plaintext to ciphertext, making information appear random."
+        },
+        {
+            "id" : 13,
+            "type" : "security card",
+            "name" : "Intrusion Detection System (IDS)",
+            "Security Level" : 3,
+            "CPU Power" : 2,
+            "image" : "I_D_S_Card.png",
+            "description" : "Network monitor for malicious activity, reports to security management.Can respond to intrusion."
+        },
+        {
+            "id" : 14,
+            "type" : "security card",
+            "name" : "Two-Factor Authentication (2FA)",
+            "Security Level" : 2,
+            "CPU Power" : 1,
+            "image" : "2F_A_Card.png",
+            "description" : "Enhanced security system requiring two forms of ID for access, e.g., password and smartphone code."
+        },
+        {
+            "id" : 15,
+            "type" : "security card",
+            "name" : "Patch Management",
+            "Security Level" : 2,
+            "CPU Power" : 1,
+            "image" : "P_M_Card.png",
+            "description" : "Applying updates to protect against vulnerabilities and optimize system performance."
+        },
+        {
+            "id" : 16,
+            "type" : "security card",
+            "name" : "Network Monitoring",
+            "Security Level" : 3,
+            "CPU Power" : 2,
+            "image" : "N_M_Card.png",
+            "description" : "Constantly scan networks for issues to notify admins of internal problems (e.g., slow traffic, failures)."
+        },
+        {
+            "id" : 17,
+            "type" : "security card",
+            "name" : "Secure Password Policy",
+            "Security Level" : 1,
+            "CPU Power" : 1,
+            "image" : "S_P_P_Card.png",
+            "description" : "Improves security with rules for creating and managing dependable passwords. Part of organization's regulations."
+        },
+        {
+            "id" : 18,
+            "type" : "security card",
+            "name" : "Biometric Authentication",
+            "Security Level" : 4,
+            "CPU Power" : 3,
+            "image" : "B_A_Card.png",
+            "description" : "Secure cybersecurity using unique biological traits like fingerprints, voices, retinas, and facial features for user identity verification."
+        },
+        {
+            "id" : 19,
+            "type" : "security card",
+            "name" : "Secure Socket Layer",
+            "Security Level" : 3,
+            "CPU Power" : 2,
+            "image" : "S_S_L_Card.png",
+            "description" : "Secure protocol enabling encrypted Internet communication through symmetric and asymmetric cryptography."
+        },
+        {
+            "id" : 20,
+            "type" : "security card",
+            "name" : "Security Patch",
+            "Security Level" : 2,
+            "CPU Power" : 1,
+            "image" : "S_P_Card.png",
+            "description" : "Software update fixing security and other issues for an organization's assets, from the manufacturer."
+        }
+    ]
+}
