@@ -7,8 +7,7 @@ import { getDoc, getDocs, query, where } from 'firebase/firestore';
 export async function load({ locals, cookies, url }) {
 	if (!locals.user) throw error(401, 'sign in required');
 
-	let game_id = url.searchParams.get('game_id');
-	game_id = cookies.get('game_id') ?? null;
+	const game_id = url.searchParams.get('game_id') ?? cookies.get('game_id') ?? null;
 
 	if (!game_id) return {};
 
