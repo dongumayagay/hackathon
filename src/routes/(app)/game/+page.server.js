@@ -5,25 +5,30 @@ import { getDoc, getDocs, query, where } from 'firebase/firestore';
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ locals, cookies, url }) {
-	if (!locals.user) throw error(401, 'sign in required');
+	try {
+		if (!locals.user) throw error(401, 'sign in required');
 
-	const game_id = url.searchParams.get('game_id') ?? cookies.get('game_id') ?? null;
+		const game_id = url.searchParams.get('game_id') ?? cookies.get('game_id') ?? null;
 
-	if (!game_id) return {};
+		if (!game_id) return {};
 
-	const game_snapshot = await getDoc(doc(db, `game/${game_id}`));
-	if (!game_snapshot.exists()) throw error(404, "Game Lobby doesn't exist");
+		const game_snapshot = await getDoc(doc(db, `game/${game_id}`));
+		if (!game_snapshot.exists()) throw error(404, "Game Lobby doesn't exist");
 
-	const players_snapshot = await getDocs(
-		query(collection(db, 'players'), where('game_id', '==', game_id))
-	);
-	const players = players_snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-	if (!players.some((player) => player.id === locals.user?.uid) && players_snapshot.size >= 2)
-		throw error(403, 'Lobby is full');
+		const players_snapshot = await getDocs(
+			query(collection(db, 'players'), where('game_id', '==', game_id))
+		);
+		const players = players_snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+		if (!players.some((player) => player.id === locals.user?.uid) && players_snapshot.size >= 2)
+			throw error(403, 'Lobby is full');
 
-	await addPlayer(locals.user, game_id);
-	cookies.set('game_id', game_id);
-	return { game_id, players };
+		await addPlayer(locals.user, game_id);
+		cookies.set('game_id', game_id);
+		return { game_id, players };
+	} catch (e) {
+		cookies.delete('game_id');
+		throw e;
+	}
 }
 
 /** @type {import('./$types').Actions} */
