@@ -17,5 +17,8 @@ export async function handle({ event, resolve }) {
 		if (event.locals.claims?.admin !== true) throw error(403, 'Forbidden');
 	}
 
+	if (event.url.pathname.startsWith('/game/') && !event.locals.claims)
+		throw error(401, 'sign in required');
+
 	return resolve(event);
 }

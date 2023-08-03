@@ -10,6 +10,7 @@ import {
 	signInWithPopup,
 	signOut
 } from 'firebase/auth';
+import { getDatabase } from 'firebase/database';
 import { invalidateAll } from '$app/navigation';
 // import { getAnalytics } from 'firebase/analytics';
 // TODO: Add SDKs for Firebase products that you want to use
@@ -33,7 +34,7 @@ export const app = initializeApp(firebaseConfig, 'CLIENT');
 export const db = getFirestore(app);
 export const auth = getAuth(app);
 setPersistence(auth, inMemoryPersistence);
-
+export const realtime = getDatabase(app);
 export async function google_signin() {
 	const credential = await signInWithPopup(auth, new GoogleAuthProvider());
 	const idToken = await getIdToken(credential.user);
