@@ -5,6 +5,8 @@
 	import { onMount } from 'svelte';
 	import QuitGame from './QuitGame.svelte';
 	import GameId from './GameId.svelte';
+	import { toast } from 'svelte-sonner';
+	import Player from './Player.svelte';
 
 	$: players = $page.data.players;
 
@@ -21,6 +23,14 @@
 				query(collection(db, 'players'), where('game_id', '==', $page.data.game_id)),
 				(docs_snapshot) => {
 					players = docs_snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+					// docs_snapshot.docChanges().forEach((change) => {
+					// 	if (change.type === 'added') {
+					// 		toast.success(`${change.doc.data().displayName} joined the game`);
+					// 	}
+					// 	if (change.type === 'removed') {
+					// 		toast.error(`${change.doc.data().displayName} leaved the game`);
+					// 	}
+					// });
 				}
 			);
 		}
@@ -32,18 +42,43 @@
 			leave_game();
 		};
 	});
+
+	/**
+	 * @param {any} uidToFind
+	 */
+	function findIndexByUid(uidToFind) {
+		const index = players.findIndex((/** @type { any } */ obj) => obj.id === uidToFind);
+		return index;
+	}
+
+	/**@type {number} */
+	let player_index;
+	/**@type {number} */
+	let enemy_index;
+	$: if (players.length == 2) {
+		player_index = findIndexByUid($page.data.user.uid);
+		enemy_index = !player_index ? 1 : 0;
+	}
 </script>
 
-<div style="height:100dvh;" class=" ">
+<div style="height:100dvh;" class=" flex flex-col">
 	<header class="flex p-4 justify-between w-full">
 		<GameId />
 		<QuitGame />
 	</header>
-	<!-- {#if players.length === 1}
-		<div class="fixed h-screen bg-white" />
-	{/if} -->
-	<pre>
-		
-		{JSON.stringify(players, null, 2)}
-	</pre>
+	{#if players.length !== 2}
+		<div class="h-full relative">
+			<h1 class="text-2xl top-1/3 -translate-x-1/2 left-1/2 absolute">Waiting for Player 2...</h1>
+		</div>
+	{/if}
+	{#if players.length == 2}
+		<main class="flex-1 flex flex-col justify-between p-3 pt-0">
+			<!-- <pre>
+
+				{JSON.stringify(players, null, 2)}
+			</pre> -->
+			<Player player={players[enemy_index]} is_user={false} />
+			<Player player={players[player_index]} is_user={true} />
+		</main>
+	{/if}
 </div>
