@@ -6,8 +6,7 @@
 	import QuitGame from './QuitGame.svelte';
 	import GameId from './GameId.svelte';
 
-	// /** @type {import('./$types').PageData} */
-	// export let data;
+	$: players = $page.data.players;
 
 	async function leave_game() {
 		await deleteDoc(doc(db, `players/${$page.data.user.uid}`));
@@ -19,9 +18,9 @@
 
 		async function game_set() {
 			unsub = onSnapshot(
-				query(collection(db, 'players'), where('game_id', '==', $page.params.game_id)),
+				query(collection(db, 'players'), where('game_id', '==', $page.data.game_id)),
 				(docs_snapshot) => {
-					$page.data.players = docs_snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+					players = docs_snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 				}
 			);
 		}
@@ -40,7 +39,11 @@
 		<GameId />
 		<QuitGame />
 	</header>
-	{#if $page.data.players === 1}
-		<div class="fixed h-screen bg-white/50" />
-	{/if}
+	<!-- {#if players.length === 1}
+		<div class="fixed h-screen bg-white" />
+	{/if} -->
+	<pre>
+		
+		{JSON.stringify(players, null, 2)}
+	</pre>
 </div>
