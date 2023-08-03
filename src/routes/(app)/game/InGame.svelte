@@ -40,4 +40,7 @@
 		<GameId />
 		<QuitGame />
 	</header>
+	{#if $page.data.players === 1}
+		<div class="fixed h-screen bg-white/50" />
+	{/if}
 </div>
