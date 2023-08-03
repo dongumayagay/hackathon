@@ -31,7 +31,7 @@
 </script>
 
 <button
-	class="btn btn-primary mx-auto btn-wide"
+	class="btn btn-info rounded-full"
 	on:click={() => {
 		toast.promise(create_game, {
 			loading: 'Creating Game',
@@ -41,5 +41,6 @@
 	}}
 	disabled={loading}
 >
+<img src="/skull.png" alt="google icon" class="h-6 w-6" />
 	create game
 </button>
