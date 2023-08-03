@@ -40,5 +40,8 @@
 	<input type="hidden" name="from" value={from} />
 	<input type="hidden" name="damage" value={damage} />
 	<input type="hidden" name="cost" value={cost} />
-	<button class="btn" disabled={mp <= 0 || loading}>attack</button>
+	<button class="btn" disabled={mp <= 0 || loading}>
+		<span class=" loading-spinner" class:loading />
+		attack</button
+	>
 </form>
