@@ -1,8 +1,8 @@
 <script>
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
-	import { db } from '$lib/firebase/client';
-	import { addDoc, collection } from 'firebase/firestore';
+	import { addPlayer, db } from '$lib/firebase/client';
+	import { collection, doc, setDoc } from 'firebase/firestore';
 	import { toast } from 'svelte-sonner';
 
 	let loading = false;
@@ -11,16 +11,22 @@
 		if (!$page.data.user) return;
 		loading = true;
 		try {
-			const game_col_ref = collection(db, 'game');
-			const doc_ref = await addDoc(game_col_ref, {
-				players: []
-			});
-			loading = false;
-			await goto(`/game/${doc_ref.id}`);
+			const game_id = doc(collection(db, 'id')).id;
+
+			await Promise.all([
+				setDoc(doc(db, `game/${game_id}`), {
+					which_player_turn: null,
+					winner: null
+				}),
+				addPlayer($page.data.user, game_id)
+			]);
+
+			await goto(`/game/${game_id}`);
 		} catch (e) {
-			// @ts-ignore
+			console.error(e);
 			return e;
 		}
+		loading = false;
 	}
 </script>
 

@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
+import { deleteDoc, doc, getDoc, getFirestore, setDoc } from 'firebase/firestore';
 import {
 	getAuth,
 	setPersistence,
@@ -47,3 +47,33 @@ export async function sign_out() {
 	await fetch('/api/auth', { method: 'DELETE' });
 	await invalidateAll();
 }
+
+/**
+ * @param {any} user
+ * @param {string} game_id
+ */
+export async function addPlayer(user, game_id) {
+	const doc_ref = doc(db, `players/${user.uid}`);
+
+	const snapshot = await getDoc(doc_ref);
+	if (snapshot.exists()) return;
+
+	await setDoc(doc_ref, {
+		game_id,
+		photoURL: user.photoURL,
+		displayName: user.displayName,
+		hp: 30,
+		mp: 4,
+		max_mp: 10
+	});
+}
+
+/**
+ * @param {string} uid
+ */
+export async function removePlayer(uid) {
+	const doc_ref = doc(db, `players/${uid}`);
+	await deleteDoc(doc_ref);
+}
+
+export async function deleteGame(game_id) {}

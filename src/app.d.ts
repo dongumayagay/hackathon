@@ -7,7 +7,8 @@ declare global {
 	namespace App {
 		// interface Error {}
 		interface Locals {
-			claims: DecodedIdToken | null
+			claims: DecodedIdToken | null,
+			user: UserRecord | null
 		}
 		// interface PageData {}
 		// interface Platform {}
