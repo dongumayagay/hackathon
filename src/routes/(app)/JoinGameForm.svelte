@@ -8,25 +8,9 @@
 
     let lobbyId = "";
     let loading = false;
-
-    async function submitHandler() {
-        if (!$page.data.user) return;
-        loading = true;
-        try {
-            await goto(`game/${lobbyId}`)
-        } catch (error) {
-            console.log(error)
-            return error;
-        }
-    }
 </script>
 
-<form class="flex items-end" on:submit|preventDefault={()=>toast.promise(submitHandler, {
-    loading: `Finding lobby ${lobbyId}`,
-    success: 'Lobby Found',
-    error: "Lobby Not Found, Please Try Again"
-}
-)}>
+<div class="flex items-end">
     <div class="flex flex-col gap-2">
         <label for="lobby-input">
             <span>Find the Lobby Id</span>
@@ -34,7 +18,7 @@
         <input type="text" id="lobby-input" class="input" bind:value={lobbyId} required>
     </div>
     
-    <button type="submit" class="btn btn-secondary">
+    <a href="/game/{lobbyId}" class="btn btn-secondary">
     Join Game
-    </button>
-</form>
+    </a>
+</div>
