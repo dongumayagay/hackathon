@@ -1,5 +1,5 @@
 import { addPlayer, db } from '$lib/firebase/client';
-import { collection, deleteDoc, doc, setDoc } from 'firebase/firestore';
+import { collection, deleteDoc, doc, increment, setDoc, updateDoc } from 'firebase/firestore';
 import { error, redirect } from '@sveltejs/kit';
 import { getDoc, getDocs, query, where } from 'firebase/firestore';
 
@@ -18,6 +18,7 @@ export async function load({ locals, cookies, url }) {
 		const players_snapshot = await getDocs(
 			query(collection(db, 'players'), where('game_id', '==', game_id))
 		);
+		// @ts-ignore
 		const players = players_snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 		if (!players.some((player) => player.id === locals.user?.uid) && players_snapshot.size >= 2)
 			throw error(403, 'Lobby is full');
@@ -72,5 +73,18 @@ export const actions = {
 
 		cookies.delete('game_id');
 		throw redirect(303, '/game');
+	},
+	attack: async ({ request }) => {
+		try {
+			console.log('start attack');
+			const data = await request.formData();
+			const { cost, from, damage, to } = Object.fromEntries(data);
+			const to_ref = doc(db, `players/${to}`);
+			const from_ref = doc(db, `players/${from}`);
+			await updateDoc(to_ref, { hp: increment(parseInt(damage.toString()) * -1) });
+			await updateDoc(from_ref, { mp: increment(parseInt(cost.toString()) * -1) });
+		} catch (e) {
+			console.log(e);
+		}
 	}
 };

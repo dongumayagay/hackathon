@@ -1,4 +1,5 @@
 <script>
+	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
 	import { db } from '$lib/firebase/client';
 	import { doc, setDoc, deleteDoc, onSnapshot, query, collection, where } from 'firebase/firestore';
@@ -7,6 +8,7 @@
 	import GameId from './GameId.svelte';
 	import { toast } from 'svelte-sonner';
 	import Player from './Player.svelte';
+	import ShowCards from './ShowCards.svelte';
 
 	$: players = $page.data.players;
 
@@ -61,7 +63,10 @@
 	}
 </script>
 
-<div style="height:100dvh;" class=" flex flex-col">
+<div
+	style="height:100dvh;"
+	class=" flex flex-col bg-gradient-to-t from-green-950/20 via-transparent"
+>
 	<header class="flex p-4 justify-between w-full">
 		<GameId />
 		<QuitGame />
@@ -78,7 +83,16 @@
 				{JSON.stringify(players, null, 2)}
 			</pre> -->
 			<Player player={players[enemy_index]} is_user={false} />
-			<Player player={players[player_index]} is_user={true} />
+			<form action="?/attack" method="POST" use:enhance>
+				<input type="hidden" name="to" value={players[enemy_index].id} />
+				<input type="hidden" name="from" value={players[player_index].id} />
+				<input type="hidden" name="damage" value="2" />
+				<input type="hidden" name="cost" value="1" />
+				<button class="btn" disabled={players[player_index].mp <= 0}>attack</button>
+			</form>
+			<Player player={players[player_index]} is_user={true}>
+				<ShowCards />
+			</Player>
 		</main>
 	{/if}
 </div>

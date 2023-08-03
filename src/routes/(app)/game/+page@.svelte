@@ -1,6 +1,5 @@
 <script>
 	import InGame from './InGame.svelte';
-	import JoinGame from './JoinGame.svelte';
 	import StartMenu from './StartMenu.svelte';
 
 	/** @type {import('./$types').PageData} */
