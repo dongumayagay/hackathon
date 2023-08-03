@@ -18,14 +18,19 @@ export async function load({ locals, cookies, url }) {
 		const players_snapshot = await getDocs(
 			query(collection(db, 'players'), where('game_id', '==', game_id))
 		);
-		// @ts-ignore
-		const players = players_snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-		if (!players.some((player) => player.id === locals.user?.uid) && players_snapshot.size >= 2)
+
+		const uids = players_snapshot.docs.map((doc) => doc.id);
+		if (!uids.some((uid) => uid === locals.user?.uid) && players_snapshot.size >= 2)
 			throw error(403, 'Lobby is full');
 
 		await addPlayer(locals.user, game_id);
 		cookies.set('game_id', game_id);
-		return { game_id, players };
+
+		return {
+			game_id,
+			opponent_uid: uids.filter((uid) => uid !== locals.user?.uid),
+			enter_battle: players_snapshot.size === 2
+		};
 	} catch (e) {
 		cookies.delete('game_id');
 		throw e;

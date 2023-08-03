@@ -1,33 +1,32 @@
 <script>
-	import { page } from '$app/stores';
 	import { db } from '$lib/firebase/client';
 	import { doc, onSnapshot } from 'firebase/firestore';
 	import { onMount } from 'svelte';
-	import ShowCards from './ShowCards.svelte';
+	import ShowLogs from './ShowLogs.svelte';
 
+	export let opponent_uid = '';
 	/** @type {any}	 */
 	let player;
 
 	onMount(() => {
 		const unsub = onSnapshot(
-			doc(db, `players/${$page.data.user.uid}`),
+			doc(db, `players/${opponent_uid}`),
 			(snapshot) => (player = snapshot.data())
 		);
 		return () => unsub();
 	});
 </script>
 
-<section class={`flex gap-2 justify-between items-end`}>
-	<div class={`flex flex-col  gap-4 items-start`}>
-		<ShowCards />
-		<div class="flex gap-2">
+<section class={`flex gap-2 justify-between flex-row-reverse items-end`}>
+	<div class={`flex flex-col  gap-4 'items-end'`}>
+		<div class="flex gap-2 flex-row-reverse">
 			<img class="avatar rounded h-16" src={player?.photoURL ?? ''} alt="" />
-			<ul class="text-sm flex flex-col justify-between">
+			<ul class="text-sm flex flex-col justify-between text-right">
 				<li>{player?.displayName ?? ''}</li>
 				<li>Security: {player?.hp ?? ''}</li>
 				<li>CPU Power: {player?.mp ?? ''}</li>
 			</ul>
 		</div>
 	</div>
-	<button class="btn btn-warning">End Turn</button>
+	<ShowLogs />
 </section>
