@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
-import { doc, getDoc, getFirestore, setDoc } from 'firebase/firestore';
+import { deleteDoc, doc, getDoc, getFirestore, setDoc } from 'firebase/firestore';
 import {
 	getAuth,
 	setPersistence,
@@ -67,3 +67,13 @@ export async function addPlayer(user, game_id) {
 		max_mp: 10
 	});
 }
+
+/**
+ * @param {string} uid
+ */
+export async function removePlayer(uid) {
+	const doc_ref = doc(db, `players/${uid}`);
+	await deleteDoc(doc_ref);
+}
+
+export async function deleteGame(game_id) {}

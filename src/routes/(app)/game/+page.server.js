@@ -1,5 +1,5 @@
 import { addPlayer, db } from '$lib/firebase/client';
-import { collection, doc, setDoc } from 'firebase/firestore';
+import { collection, deleteDoc, doc, setDoc } from 'firebase/firestore';
 import { error, redirect } from '@sveltejs/kit';
 import { getDoc, getDocs, query, where } from 'firebase/firestore';
 
@@ -51,7 +51,19 @@ export const actions = {
 		cookies.set('game_id', game_id);
 		throw redirect(303, '/game');
 	},
-	quit: async ({ cookies }) => {
+	quit: async ({ cookies, locals }) => {
+		const game_id = cookies.get('game_id');
+
+		if (!game_id) return {};
+
+		const doc_ref = doc(db, `players/${locals.claims?.uid}`);
+		await deleteDoc(doc_ref);
+
+		const players_snapshot = await getDocs(
+			query(collection(db, 'players'), where('game_id', '==', game_id))
+		);
+		if (players_snapshot.size === 0) await deleteDoc(doc(db, `game/${game_id}`));
+
 		cookies.delete('game_id');
 		throw redirect(303, '/game');
 	}
