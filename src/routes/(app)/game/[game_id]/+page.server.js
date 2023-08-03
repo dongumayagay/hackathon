@@ -13,7 +13,9 @@ export async function load({ params, locals }) {
 		query(collection(db, 'players'), where('game_id', '==', game_id))
 	);
 	if (players_snapshot.size >= 2) throw error(403, 'Lobby is full');
+
 	const players = players_snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+
 	if (!players.some((player) => player.id === locals.claims?.uid))
 		await setDoc(doc(db, `players/${locals.claims.uid}`), {
 			game_id: params.game_id,
@@ -21,6 +23,5 @@ export async function load({ params, locals }) {
 			displayName: locals.user?.displayName
 		});
 
-	console.log(players);
 	return { players };
 }

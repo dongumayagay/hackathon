@@ -32,11 +32,13 @@
 			leave_game();
 		};
 	});
+	// console.log(`${$page.url.origin}/api/players/${$page.data.user.uid}`);
 </script>
 
 <svelte:window
 	on:beforeunload={async (e) => {
 		await leave_game();
+		navigator.sendBeacon(`${$page.url.origin}/api/players/${$page.data.user.uid}`);
 		e.preventDefault();
 		e.returnValue = '';
 		return '...';
