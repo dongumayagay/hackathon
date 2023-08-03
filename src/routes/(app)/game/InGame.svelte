@@ -62,14 +62,23 @@
 </script>
 
 <div style="height:100dvh;" class=" flex flex-col">
-	<header class="flex p-4 justify-between w-full">
-		<GameId />
+	<header class="flex p-4 justify-between w-full fixed">
+		<!-- <GameId /> -->
 		<QuitGame />
 	</header>
 	{#if players.length !== 2}
-		<div class="h-full relative">
-			<h1 class="text-2xl top-1/3 -translate-x-1/2 left-1/2 absolute">Waiting for Player 2...</h1>
+	<div class="hero min-h-screen bg-base-200 text-white" style="background-image: url('/bg.jpg');">
+	
+		<div class="hero-overlay bg-zinc-900/70"></div>
+		<div class="hero-content text-center flex flex-col">
+			<h1 class="text-3xl font-bold text-center">Waiting for Player 2...</h1>
+			<div class="max-w-md flex flex-col gap-4">
+				
+				<GameId />
+	
+			</div>
 		</div>
+	</div>
 	{/if}
 	{#if players.length == 2}
 		<main class="flex-1 flex flex-col justify-between p-3 pt-0">
