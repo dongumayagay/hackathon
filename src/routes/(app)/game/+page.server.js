@@ -24,10 +24,12 @@ export async function load({ locals, cookies, url }) {
 			throw error(403, 'Lobby is full');
 
 		await addPlayer(locals.user, game_id);
+
 		cookies.set('game_id', game_id);
 
 		return {
 			game_id,
+			uids,
 			opponent_uid: uids.filter((uid) => uid !== locals.user?.uid),
 			enter_battle: players_snapshot.size === 2
 		};
@@ -46,7 +48,7 @@ export const actions = {
 
 			await Promise.all([
 				setDoc(doc(db, `game/${game_id}`), {
-					which_player_turn: null,
+					turn: null,
 					winner: null
 				}),
 				addPlayer(locals.user, game_id)
@@ -81,7 +83,6 @@ export const actions = {
 	},
 	attack: async ({ request }) => {
 		try {
-			console.log('start attack');
 			const data = await request.formData();
 			const { cost, from, damage, to } = Object.fromEntries(data);
 			const to_ref = doc(db, `players/${to}`);
@@ -91,5 +92,12 @@ export const actions = {
 		} catch (e) {
 			console.log(e);
 		}
+	},
+	next_turn: async ({ request }) => {
+		const data = await request.formData();
+		const { game_id, uid } = Object.fromEntries(data);
+		await updateDoc(doc(db, `game/${game_id}`), {
+			turn: uid
+		});
 	}
 };

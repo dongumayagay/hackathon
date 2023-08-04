@@ -1,18 +1,22 @@
 <script>
 	import { page } from '$app/stores';
-	import { db } from '$lib/firebase/client';
+	import { db, drawCard } from '$lib/firebase/client';
 	import { doc, onSnapshot } from 'firebase/firestore';
 	import { onMount } from 'svelte';
 	import ShowCards from './ShowCards.svelte';
+	import EndTurn from './EndTurn.svelte';
 
+	/** @type {any}	 */
+	export let game;
+	export let opponent_uid = '';
 	/** @type {any}	 */
 	let player;
 
 	onMount(() => {
-		const unsub = onSnapshot(
-			doc(db, `players/${$page.data.user.uid}`),
-			(snapshot) => (player = snapshot.data())
-		);
+		const unsub = onSnapshot(doc(db, `players/${$page.data.user.uid}`), async (snapshot) => {
+			player = snapshot.data();
+			if (player.first) await drawCard($page.data.game_id, $page.data.user.uid, 5, true);
+		});
 		return () => unsub();
 	});
 </script>
@@ -29,5 +33,5 @@
 			</ul>
 		</div>
 	</div>
-	<button class="btn btn-warning">End Turn</button>
+	<EndTurn {game} {opponent_uid} />
 </section>

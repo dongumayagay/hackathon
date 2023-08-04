@@ -17,7 +17,7 @@
 	});
 </script>
 
-<section class={`flex gap-2 justify-between flex-row-reverse items-end`}>
+<section class={`flex gap-2 justify-between flex-row-reverse items-start`}>
 	<div class={`flex flex-col  gap-4 'items-end'`}>
 		<div class="flex gap-2 flex-row-reverse">
 			<img class="avatar rounded h-16" src={player?.photoURL ?? ''} alt="" />

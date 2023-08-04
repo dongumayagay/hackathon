@@ -8,6 +8,7 @@
 	import Battle from './Battle.svelte';
 
 	let enter_battle = $page.data.enter_battle;
+	/** @type {string}*/
 	let opponent_uid = $page.data.opponent_uid;
 
 	onMount(() => {
