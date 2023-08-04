@@ -1,15 +1,13 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
 import {
+	addDoc,
 	collection,
-	deleteDoc,
 	doc,
-	getDoc,
 	getDocs,
 	getFirestore,
 	limit,
 	query,
-	setDoc,
 	where,
 	writeBatch
 } from 'firebase/firestore';
@@ -25,7 +23,6 @@ import {
 import { getDatabase } from 'firebase/database';
 import { invalidateAll } from '$app/navigation';
 import cards from '$lib/cards';
-import { generateRandomBoolean } from '$lib/utils';
 // import { getAnalytics } from 'firebase/analytics';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -67,14 +64,10 @@ export async function sign_out() {
  * @param {string} game_id
  */
 export async function addPlayer(user, game_id) {
-	const doc_ref = doc(db, `players/${user.uid}`);
+	const player = await getPlayer(game_id, user.uid);
+	if (player) return false;
 
-	const snapshot = await getDoc(doc_ref);
-	const data = snapshot.data();
-	if (snapshot.exists() && data?.game_id !== game_id) await deleteDoc(doc_ref);
-	if (snapshot.exists()) return false;
-
-	await setDoc(doc_ref, {
+	await addDoc(collection(db, 'players'), {
 		game_id,
 		uid: user.uid,
 		photoURL: user.photoURL,
@@ -86,13 +79,6 @@ export async function addPlayer(user, game_id) {
 	});
 
 	return true;
-}
-/**
- * @param {string} uid
- */
-export async function removePlayer(uid) {
-	const doc_ref = doc(db, `players/${uid}`);
-	await deleteDoc(doc_ref);
 }
 
 /**
@@ -120,30 +106,31 @@ export async function drawCard(game_id, uid, number = 1) {
 	await batch.commit();
 }
 
-/** @param {string} game_id */
-export async function pick_first(game_id) {
-	const game_snapshot = await getDoc(doc(db, `game/${game_id}`));
-	const game_data = game_snapshot.data();
-	if (!game_data?.start) return {};
-
-	const players_snapshot = await getDocs(
-		query(collection(db, 'players'), where('game_id', '==', game_id))
-	);
-	const uids = players_snapshot.docs.map((doc) => doc.id);
-
-	const random_index = generateRandomBoolean(game_id) ? 0 : 1;
-
-	await setDoc(doc(db, `game/${game_id}`), {
-		turn: uids[random_index],
-		start: false
-	});
-}
-
 /**
  * @param {string} game_id
  * @param {string} user_uid
  */
-export async function getOpponentUID(game_id, user_uid) {
+export async function getPlayer(game_id, user_uid) {
+	const snapshot = await getDocs(
+		query(
+			collection(db, 'players'),
+			where('game_id', '==', game_id),
+			where('uid', '==', user_uid),
+			limit(1)
+		)
+	);
+	if (snapshot.size === 0) return null;
+	const doc = snapshot.docs[0];
+	return {
+		id: doc,
+		...doc.data()
+	};
+}
+/**
+ * @param {string} game_id
+ * @param {string} user_uid
+ */
+export async function getOpponent(game_id, user_uid) {
 	const snapshot = await getDocs(
 		query(
 			collection(db, 'players'),
@@ -152,5 +139,10 @@ export async function getOpponentUID(game_id, user_uid) {
 			limit(1)
 		)
 	);
-	return snapshot.docs[0].id;
+	if (snapshot.size === 0) return null;
+	const doc = snapshot.docs[0];
+	return {
+		id: doc,
+		...doc.data()
+	};
 }
