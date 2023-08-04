@@ -1,5 +1,7 @@
 <script>
 	import { enhance } from '$app/forms';
+	import { update } from 'firebase/database';
+	import { toast } from 'svelte-sonner';
 	let loading = false;
 </script>
 
@@ -9,8 +11,10 @@
 	class="form-control"
 	use:enhance={({}) => {
 		loading = true;
-		return async ({ update }) => {
+		return async ({ update, result }) => {
 			await update();
+			if (result.type === 'failure') toast.error(`something went wrong`);
+			else toast.success('Invite your Friends!');
 			loading = false;
 		};
 	}}

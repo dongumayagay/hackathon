@@ -1,11 +1,11 @@
 <script>
 	import { page } from '$app/stores';
-	import InGame from './InGame.svelte';
+	import Lobby from './Lobby.svelte';
 	import StartMenu from './StartMenu.svelte';
 </script>
 
 {#if !$page.data.game_id}
 	<StartMenu />
 {:else}
-	<InGame />
+	<Lobby />
 {/if}

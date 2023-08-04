@@ -17,6 +17,6 @@
 		<p>
 			{$page.error?.message}
 		</p>
-		<a href="/" class="link">go back to home page</a>
+		<a href="/game" class="link">go back to home page</a>
 	</div>
 </main>

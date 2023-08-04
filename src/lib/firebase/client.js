@@ -1,14 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
-import {
-	collection,
-	deleteDoc,
-	doc,
-	getDoc,
-	getFirestore,
-	setDoc,
-	writeBatch
-} from 'firebase/firestore';
+import { collection, deleteDoc, doc, getFirestore, setDoc, writeBatch } from 'firebase/firestore';
 import {
 	getAuth,
 	setPersistence,
@@ -64,8 +56,9 @@ export async function sign_out() {
 export async function addPlayer(user, game_id) {
 	const doc_ref = doc(db, `players/${user.uid}`);
 
-	const snapshot = await getDoc(doc_ref);
-	if (snapshot.exists()) return;
+	// const snapshot =
+	// await deleteDoc(doc_ref);
+	// if (snapshot.exists()) return;
 
 	await setDoc(doc_ref, {
 		game_id,
@@ -77,7 +70,6 @@ export async function addPlayer(user, game_id) {
 		first: true
 	});
 }
-
 /**
  * @param {string} uid
  */

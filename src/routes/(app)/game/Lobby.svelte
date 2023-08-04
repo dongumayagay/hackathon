@@ -5,8 +5,9 @@
 	import { onSnapshot, query, collection, where } from 'firebase/firestore';
 	import { onMount } from 'svelte';
 	import QuitGame from './QuitGame.svelte';
-	import GameId from './GameId.svelte';
+	import ShareGame from './ShareGame.svelte';
 	import Battle from './Battle.svelte';
+	import CancelLobby from './CancelLobby.svelte';
 
 	let enter_battle = $page.data.enter_battle;
 	/** @type {string}*/
@@ -42,20 +43,14 @@
 			class="hero min-h-screen bg-base-200 text-white relative"
 			style="background-image: url('/bg.jpg');"
 		>
-			<div class="absolute top-4 left-4">
-				<QuitGame />
-			</div>
 			<div class="hero-overlay bg-zinc-900/70" />
 			<div class="hero-content text-center flex flex-col">
 				<h1 class="text-3xl font-bold text-center">Waiting for Opponent...</h1>
 				<div class="max-w-md flex flex-col gap-4">
-					<GameId />
+					<ShareGame />
+					<CancelLobby />
 				</div>
 			</div>
 		</div>
-		<!-- <div class="h-full relative">
-			<h1 class="text-2xl top-1/3 -translate-x-1/2 left-1/2 absolute">Waiting for Opponent...</h1>
-			<GameId />
-		</div> -->
 	{/if}
 </div>
