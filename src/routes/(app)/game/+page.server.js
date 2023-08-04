@@ -68,12 +68,13 @@ export const actions = {
 		}
 		throw redirect(303, '/game');
 	},
-	join: async ({ cookies, request }) => {
+	join: async ({ cookies, request, locals }) => {
 		const game_id = (await (await request.formData()).get('game_id')?.toString()) ?? '';
 		const snapshot = await getDoc(doc(db, `game/${game_id}`));
 		if (!snapshot.exists()) {
 			return fail(404, { error: "Game doesn't exist" });
 		}
+		await deleteDoc(doc(db, `players/${locals.claims?.uid}`));
 		cookies.set('game_id', game_id);
 		throw redirect(303, '/game');
 	},
