@@ -79,7 +79,7 @@ export const playerCardsStore = derived(
 		if (!browser && !$gameIdStore && !$userIdStore) return;
 		const unsub = onSnapshot(
 			query(
-				collection(db, 'cards_on_hand'),
+				collection(db, 'playerCards'),
 				where('game_id', '==', $gameIdStore),
 				where('uid', '==', $userIdStore)
 			),

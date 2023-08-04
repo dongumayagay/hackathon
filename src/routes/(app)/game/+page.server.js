@@ -64,7 +64,7 @@ export const actions = {
 		batch.delete(doc(db, `players/${locals.claims?.uid}`));
 
 		const cards_snapshot = await getDocs(
-			query(collection(db, 'cards_on_hand'), where('uid', '==', locals.claims?.uid))
+			query(collection(db, 'playerCards'), where('uid', '==', locals.claims?.uid))
 		);
 
 		cards_snapshot.docs.forEach((doc) => {
@@ -132,7 +132,7 @@ export const actions = {
 				hp: increment(parseInt(security.toString()))
 			});
 		}
-		await deleteDoc(doc(db, `cards_on_hand/${id}`));
+		await deleteDoc(doc(db, `playerCards/${id}`));
 	},
 	cancel_lobby: async ({ cookies, locals }) => {
 		const game_id = cookies.get('game_id');
@@ -166,7 +166,7 @@ export const actions = {
 		batch.delete(doc(db, `players/${locals.claims?.uid}`));
 
 		const cards_snapshot = await getDocs(
-			query(collection(db, 'cards_on_hand'), where('uid', '==', locals.claims?.uid))
+			query(collection(db, 'playerCards'), where('uid', '==', locals.claims?.uid))
 		);
 		cards_snapshot.docs.forEach((doc) => {
 			batch.delete(doc.ref);

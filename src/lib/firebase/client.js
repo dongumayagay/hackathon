@@ -101,7 +101,7 @@ export async function removePlayer(uid) {
  * @param {number} number
  */
 export async function drawCard(game_id, uid, number = 1) {
-	const cards_ref = collection(db, '/cards_on_hand');
+	const cards_ref = collection(db, '/playerCards');
 
 	const batch = writeBatch(db);
 	for (let i = 0; i < number; i++) {
