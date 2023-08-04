@@ -8,7 +8,7 @@ function getCardsData() {
     const cardsData = JSON.parse(rawData);
     return cardsData;
   } catch (error) {
-    console.error('Error reading cards.json file:', error.message);
+    console.error('Error reading cards.json file:', error);
     return null;
   }
 }
@@ -22,6 +22,9 @@ if (cardsData) {
   console.log(cardsData);
 }
 
+/**
+ * @type {any[]}
+ */
 export var playerHand = [];
 
 
