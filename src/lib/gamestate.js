@@ -84,7 +84,6 @@ export const playerCardsStore = derived(
 				where('uid', '==', $userIdStore)
 			),
 			async (snapshot) => {
-				console.log(snapshot.size);
 				// @ts-ignore
 				set(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
 			}
