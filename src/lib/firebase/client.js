@@ -1,6 +1,14 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
-import { deleteDoc, doc, getDoc, getFirestore, setDoc } from 'firebase/firestore';
+import {
+	collection,
+	deleteDoc,
+	doc,
+	getDoc,
+	getFirestore,
+	setDoc,
+	writeBatch
+} from 'firebase/firestore';
 import {
 	getAuth,
 	setPersistence,
@@ -12,6 +20,7 @@ import {
 } from 'firebase/auth';
 import { getDatabase } from 'firebase/database';
 import { invalidateAll } from '$app/navigation';
+import cards from '$lib/cards';
 // import { getAnalytics } from 'firebase/analytics';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -64,7 +73,8 @@ export async function addPlayer(user, game_id) {
 		displayName: user.displayName,
 		hp: 30,
 		mp: 4,
-		max_mp: 10
+		max_mp: 10,
+		first: true
 	});
 }
 
@@ -76,4 +86,27 @@ export async function removePlayer(uid) {
 	await deleteDoc(doc_ref);
 }
 
-export async function deleteGame(game_id) {}
+/**
+ * @param {string} game_id
+ * @param {string} uid
+ * @param {number} number
+ */
+export async function drawCard(game_id, uid, number = 1, first = false) {
+	const cards_ref = collection(db, '/cards_on_hand');
+
+	const batch = writeBatch(db);
+	for (let i = 0; i < number; i++) {
+		const randomIndex = Math.floor(Math.random() * cards.length);
+		const card = cards[randomIndex];
+
+		const doc_ref = doc(cards_ref);
+		batch.set(doc_ref, {
+			uid,
+			game_id,
+			...card
+		});
+	}
+	if (first) batch.update(doc(db, `players/${uid}`), { first: false });
+
+	await batch.commit();
+}

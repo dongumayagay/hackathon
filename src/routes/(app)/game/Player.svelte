@@ -1,39 +1,37 @@
 <script>
-	import ShowLogs from './ShowLogs.svelte';
+	import { page } from '$app/stores';
+	import { db, drawCard } from '$lib/firebase/client';
+	import { doc, onSnapshot } from 'firebase/firestore';
+	import { onMount } from 'svelte';
+	import ShowCards from './ShowCards.svelte';
+	import EndTurn from './EndTurn.svelte';
 
-	/** @type {any} */
-	export let player;
-	export let is_user = true;
+	/** @type {any}	 */
+	export let game;
+	export let opponent_uid = '';
+	/** @type {any}	 */
+	let player;
+
+	onMount(() => {
+		const unsub = onSnapshot(doc(db, `players/${$page.data.user.uid}`), async (snapshot) => {
+			player = snapshot.data();
+			if (player.first) await drawCard($page.data.game_id, $page.data.user.uid, 5, true);
+		});
+		return () => unsub();
+	});
 </script>
 
-<!-- <section class="flex items-center gap-x-2 justify-evenly">
-	<div class="avatar">
-		<div class="w-12 h-12 rounded-full">
-			<img src={player?.photoURL ?? 'https://ui-avatars.com/api/?name=?'} alt="" />
-		</div>
-	</div>
-	<h1 class="text-xl font-bold">
-		{player?.displayName ?? 'Loading...'}
-	</h1>
-</section> -->
-
-<section
-	class={`flex gap-2 justify-between ${!is_user ? 'items-start' : 'items-end'}`}
-	class:flex-row-reverse={!is_user}
->
-	<div class={`flex flex-col  gap-4 ${is_user ? 'items-start' : 'items-end'}`}>
-		<slot />
-		<div class="flex gap-2" class:flex-row-reverse={!is_user}>
-			<img class="avatar rounded h-16" src={player.photoURL} alt="" />
-			<ul class="text-sm flex flex-col justify-between" class:text-right={!is_user}>
-				<li>{player.displayName}</li>
-				<li>Security: {player.hp}</li>
-				<li>CPU Power: {player.mp}</li>
+<section class={`flex gap-2 justify-between items-end`}>
+	<div class={`flex flex-col  gap-4 items-start`}>
+		<ShowCards />
+		<div class="flex gap-2">
+			<img class="avatar rounded h-16" src={player?.photoURL ?? ''} alt="" />
+			<ul class="text-sm flex flex-col justify-between">
+				<li>{player?.displayName ?? ''}</li>
+				<li>Security: {player?.hp ?? ''}</li>
+				<li>CPU Power: {player?.mp ?? ''}</li>
 			</ul>
 		</div>
 	</div>
-	<button class:hidden={!is_user} class="btn btn-warning">End Turn</button>
-	{#if !is_user}
-		<ShowLogs />
-	{/if}
+	<EndTurn {game} {opponent_uid} />
 </section>

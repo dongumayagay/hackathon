@@ -1,8 +1,21 @@
 <script>
-	/**
-	 * @type {HTMLDialogElement}
-	 */
+	import { page } from '$app/stores';
+	import { db } from '$lib/firebase/client';
+	import { collection, onSnapshot, query, where } from 'firebase/firestore';
+	import { onMount } from 'svelte';
+
+	/** @type {HTMLDialogElement}	 */
 	let show_logs_modal;
+	let logs = [];
+	onMount(() => {
+		const unsub = onSnapshot(
+			query(collection(db, `game_logs`), where('game_id', '==', $page.data.game_id)),
+			(snapshot) => {
+				logs = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+			}
+		);
+		return () => unsub();
+	});
 </script>
 
 <div class="tooltip tooltip-right" data-tip="show battle logs">
@@ -26,6 +39,7 @@
 
 <dialog class="modal" bind:this={show_logs_modal}>
 	<form method="dialog" class="modal-box">
+		<button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
 		<h3 class="font-bold text-lg">Battle Log!</h3>
 		<ul class="flex flex-col gap-2">
 			{#each { length: 20 } as _}
