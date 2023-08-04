@@ -8,22 +8,22 @@
 	import Battle from './Battle.svelte';
 	import CancelLobby from './CancelLobby.svelte';
 
-	let enter_battle = $page.data.enter_battle;
+	let players_size = $page.data.players_size;
 	/** @type {string}*/
 	let opponent_uid = $page.data.opponent_uid;
 
 	onMount(() => {
-		const unsub = onSnapshot(
+		const players_unsub = onSnapshot(
 			query(collection(db, 'players'), where('game_id', '==', $page.data.game_id)),
 			(snapshot) => {
-				enter_battle = snapshot.size === 2;
-				if (enter_battle)
+				players_size = snapshot.size === 2;
+				if (players_size === 2)
 					opponent_uid = snapshot.docs.filter((doc) => doc.id !== $page.data.user.uid)[0].id;
 			}
 		);
 
 		return () => {
-			unsub();
+			players_unsub();
 		};
 	});
 </script>
@@ -35,7 +35,7 @@
     background-position: center;"
 	class=" flex flex-col min-h-full"
 >
-	{#if enter_battle}
+	{#if players_size == 2}
 		<Battle {opponent_uid} />
 	{:else}
 		<div

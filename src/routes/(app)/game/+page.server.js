@@ -38,7 +38,7 @@ export async function load({ locals, cookies, url }) {
 			game_id,
 			uids,
 			opponent_uid: uids.filter((uid) => uid !== locals.user?.uid),
-			enter_battle: players_snapshot.size === 2
+			players_size: players_snapshot.size === 2
 		};
 	} catch (e) {
 		cookies.delete('game_id');
