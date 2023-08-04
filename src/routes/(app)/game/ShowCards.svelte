@@ -3,9 +3,11 @@
 	import { db, drawCard } from '$lib/firebase/client';
 	import { collection, onSnapshot, query, where } from 'firebase/firestore';
 	import { onMount } from 'svelte';
+	import CardItem from './CardItem.svelte';
 
 	/** @type {HTMLDialogElement}	 */
 	let show_cards_modal;
+	export let opponent_uid = '';
 
 	/** @type {any[]} */
 	let cards_on_hand = [];
@@ -31,9 +33,7 @@
 	<form method="dialog" class="modal-box w-full max-w-none p-0 bg-transparent">
 		<div class="carousel carousel-center w-full space-x-4 rounded-box">
 			{#each cards_on_hand as card}
-				<div class="carousel-item">
-					<img alt="" src={card?.image ?? ''} class="rounded-box h-96" />
-				</div>
+				<CardItem {card} {opponent_uid} on:submit={() => show_cards_modal.close()} />
 			{:else}
 				<h1 class="mx-auto">No Cards</h1>
 			{/each}
