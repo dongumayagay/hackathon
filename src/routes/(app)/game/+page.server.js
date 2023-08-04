@@ -187,7 +187,7 @@ export const actions = {
 		batch.update(doc(db, `game/${game_id}`), {
 			winner: opponent_uid
 		});
-		batch.delete(doc(db, `players_snapshot/${locals.claims?.uid}`));
+		batch.delete(doc(db, `players/${locals.claims?.uid}`));
 
 		const cards_snapshot = await getDocs(
 			query(collection(db, 'cards_on_hand'), where('uid', '==', locals.claims?.uid))
