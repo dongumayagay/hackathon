@@ -18,7 +18,7 @@ export async function load({ locals, cookies }) {
 		);
 
 		// if user is already in game
-		const ids = players_snapshot.docs.map((doc) => doc.id);
+		let ids = players_snapshot.docs.map((doc) => doc.id);
 		if (ids.includes(locals.user.uid)) return { game_id };
 
 		// check if exist
@@ -30,21 +30,17 @@ export async function load({ locals, cookies }) {
 
 		// setup game
 		if (players_snapshot.size === 1 && added) {
+			ids.push(locals.claims?.uid ?? '');
 			const index = generateRandomBoolean(game_id) ? 0 : 1;
-			// await Promise.all([
-			// 	drawCard(game_id, ids[0]),
-			// 	drawCard(game_id, ids[1]),
-			// 	updateDoc(game_snapshot.ref, {
-			// 		start: true,
-			// 		turn: ids[index]
-			// 	})
-			// ]);
-			await updateDoc(game_snapshot.ref, {
-				start: true,
-				turn: ids[index]
-			});
-			await drawCard(game_id, ids[0]);
-			await drawCard(game_id, ids[1]);
+
+			await Promise.all([
+				drawCard(game_id, ids[0], 5),
+				drawCard(game_id, ids[1], 5),
+				updateDoc(game_snapshot.ref, {
+					start: true,
+					turn: ids[index]
+				})
+			]);
 		}
 
 		cookies.set('game_id', game_id);
@@ -65,20 +61,27 @@ export const actions = {
 		if (!game_id || !locals.claims?.uid) return {};
 		const opponent_uid = await getOpponentUID(game_id, locals.claims.uid);
 
-		await updateDoc(doc(db, `game/${game_id}`), {
-			turn: opponent_uid
-		});
+		const player_ref = doc(db, `players/${locals.user?.uid}`);
 
 		const oppenent_ref = doc(db, `players/${opponent_uid}`);
 		const opponent_snapshot = await getDoc(oppenent_ref);
 		const opponent = opponent_snapshot.data();
 
-		if (opponent?.first) return;
+		const batch = writeBatch(db);
 
-		await drawCard(game_id, opponent_uid);
-		const current_mp = opponent?.mp ?? 0;
-		if (current_mp + 2 > 10) await updateDoc(oppenent_ref, { mp: 10 });
-		else await updateDoc(oppenent_ref, { mp: increment(2) });
+		batch.update(player_ref, { first: false });
+		batch.update(doc(db, `game/${game_id}`), {
+			turn: opponent_uid
+		});
+
+		if (!opponent?.first) {
+			const current_mp = opponent?.mp ?? 0;
+			if (current_mp + 2 > 10) batch.update(oppenent_ref, { mp: 10 });
+			else batch.update(oppenent_ref, { mp: increment(2) });
+			await drawCard(game_id, opponent_uid);
+		}
+
+		await batch.commit();
 	},
 	use_card: async ({ request }) => {
 		const data = await request.formData();
