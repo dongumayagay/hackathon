@@ -106,7 +106,7 @@ export const actions = {
 		if (!player || !opponent) return;
 
 		const current_turn = game?.turn ?? null;
-		if (current_turn !== uid) return fail(400, { error: 'Not Your Turn Yet' });
+		if (current_turn !== player.id) return fail(400, { error: 'Not Your Turn Yet' });
 
 		// @ts-ignore
 		const current_mp = player?.mp ?? 0;
