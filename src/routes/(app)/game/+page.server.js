@@ -113,8 +113,10 @@ export const actions = {
 		await drawCard(game_id.toString(), uid.toString());
 
 		const oppenent_ref = doc(db, `players/${uid}`);
-		const player = await getDoc(oppenent_ref);
-		const current_mp = player.data()?.mp ?? 0;
+		const players_snapshot = await getDoc(oppenent_ref);
+		const player = players_snapshot.data();
+		if (player?.first) return;
+		const current_mp = player?.mp ?? 0;
 		if (current_mp + 2 > 10) await updateDoc(oppenent_ref, { mp: 10 });
 		else await updateDoc(oppenent_ref, { mp: increment(2) });
 	},

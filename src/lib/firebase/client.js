@@ -66,7 +66,6 @@ export async function sign_out() {
  * @param {string} game_id
  */
 export async function addPlayer(user, game_id) {
-	console.log('test');
 	const doc_ref = doc(db, `players/${user.uid}`);
 
 	const snapshot = await getDoc(doc_ref);
