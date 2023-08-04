@@ -1,6 +1,6 @@
 <script>
 	import { page } from '$app/stores';
-	import { db, drawCard } from '$lib/firebase/client';
+	import { db } from '$lib/firebase/client';
 	import { collection, onSnapshot, query, where } from 'firebase/firestore';
 	import { onMount } from 'svelte';
 	import CardItem from './CardItem.svelte';
