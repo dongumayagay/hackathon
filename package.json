@@ -33,6 +33,7 @@
 	"dependencies": {
 		"firebase": "^10.1.0",
 		"firebase-admin": "^11.10.1",
-		"svelte-sonner": "^0.1.2"
+		"svelte-sonner": "^0.1.2",
+		"sveltefire": "^0.4.1"
 	}
 }

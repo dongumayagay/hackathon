@@ -14,6 +14,9 @@ dependencies:
   svelte-sonner:
     specifier: ^0.1.2
     version: 0.1.2(svelte@4.1.2)
+  sveltefire:
+    specifier: ^0.4.1
+    version: 0.4.1(firebase@10.1.0)(svelte@4.1.2)
 
 devDependencies:
   '@sveltejs/adapter-auto':
@@ -7227,6 +7230,16 @@ packages:
       locate-character: 3.0.0
       magic-string: 0.30.2
       periscopic: 3.1.0
+
+  /sveltefire@0.4.1(firebase@10.1.0)(svelte@4.1.2):
+    resolution: {integrity: sha512-B1fkNFjYvvsRDKq/K58pNkE/74c499z0umrLtjgv4f69ddCkgChW0KEd8biumpEF9wAlLN1AHSGWneCNdjxPrA==}
+    peerDependencies:
+      firebase: ^9.0.0
+      svelte: ^4.0.0
+    dependencies:
+      firebase: 10.1.0(react-native@0.72.3)
+      svelte: 4.1.2
+    dev: false
 
   /tailwindcss@3.3.3:
     resolution: {integrity: sha512-A0KgSkef7eE4Mf+nKJ83i75TMyq8HqY3qmFIJSWy8bNt0v1lG7jUcpGpoTFxAwYcWOphcTBLPPJg+bDfhDf52w==}
