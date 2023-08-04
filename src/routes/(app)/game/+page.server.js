@@ -107,16 +107,19 @@ export const actions = {
 	next_turn: async ({ request }) => {
 		const data = await request.formData();
 		const { game_id, uid } = Object.fromEntries(data);
+
 		await updateDoc(doc(db, `game/${game_id}`), {
 			turn: uid
 		});
-		await drawCard(game_id.toString(), uid.toString());
 
 		const oppenent_ref = doc(db, `players/${uid}`);
-		const players_snapshot = await getDoc(oppenent_ref);
-		const player = players_snapshot.data();
-		if (player?.first) return;
-		const current_mp = player?.mp ?? 0;
+		const opponent_snapshot = await getDoc(oppenent_ref);
+		const opponent = opponent_snapshot.data();
+
+		if (opponent?.first) return;
+
+		await drawCard(game_id.toString(), uid.toString());
+		const current_mp = opponent?.mp ?? 0;
 		if (current_mp + 2 > 10) await updateDoc(oppenent_ref, { mp: 10 });
 		else await updateDoc(oppenent_ref, { mp: increment(2) });
 	},
