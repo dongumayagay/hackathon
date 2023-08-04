@@ -10,7 +10,7 @@
 	<input type="hidden" name="uid" value={opponent_uid} />
 	{#if game?.turn}
 		<button class="btn btn-warning" disabled={game.turn !== $page.data.user.uid}>
-			{game.turn === $page.data.user.uid ? 'End Turn' : 'Wait'}
+			{game.turn === $page.data.user.uid ? 'End Turn' : "it's your Opponents Turn"}
 		</button>
 	{/if}
 </form>

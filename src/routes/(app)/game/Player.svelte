@@ -23,7 +23,7 @@
 
 <section class={`flex gap-2 justify-between items-end`}>
 	<div class={`flex flex-col  gap-4 items-start`}>
-		<ShowCards />
+		<ShowCards {opponent_uid} />
 		<div class="flex gap-2">
 			<img class="avatar rounded h-16" src={player?.photoURL ?? ''} alt="" />
 			<ul class="text-sm flex flex-col justify-between">
