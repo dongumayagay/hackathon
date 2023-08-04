@@ -1,10 +1,12 @@
 <script>
+	import QuitGame from './QuitGame.svelte';
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import Opponent from './Opponent.svelte';
 	import Player from './Player.svelte';
 	import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
 	import { db } from '$lib/firebase/client';
+	import { toast } from 'svelte-sonner';
 
 	/** @type{any}*/
 	let game;
@@ -21,19 +23,20 @@
 					turn: $page.data.uids[index]
 				});
 			}
+			if (game?.turn && game?.turn === $page.data.user.uid) toast('Its now your turn!');
 		});
 		return () => unsub();
 	});
 </script>
 
-<main class="flex-1 flex flex-col justify-between p-3 pt-0">
+<main class="flex-1 flex flex-col justify-between p-4">
 	<Opponent {opponent_uid} />
 	<!-- <TestAttack
-		bind:mp={players[player_index].mp}
-		to={opponent_uid}
-		from={players[player_index].id}
-		damage={2}
-		cost={1}
-	/> -->
+			bind:mp={players[player_index].mp}
+			to={opponent_uid}
+			from={players[player_index].id}
+			damage={2}
+			cost={1}
+			/> -->
 	<Player {game} {opponent_uid} />
 </main>

@@ -14,7 +14,7 @@ import { getDoc, getDocs, query, where } from 'firebase/firestore';
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ locals, cookies, url }) {
 	try {
-		if (!locals.user) throw error(401, 'sign in required');
+		if (!locals.user) throw redirect(303, '/game');
 
 		const game_id = url.searchParams.get('game_id') ?? cookies.get('game_id') ?? null;
 
@@ -70,6 +70,10 @@ export const actions = {
 	},
 	join: async ({ cookies, request }) => {
 		const game_id = (await (await request.formData()).get('game_id')?.toString()) ?? '';
+		const snapshot = await getDoc(doc(db, `game/${game_id}`));
+		if (!snapshot.exists()) {
+			return fail(404, { error: "Game doesn't exist" });
+		}
 		cookies.set('game_id', game_id);
 		throw redirect(303, '/game');
 	},
@@ -100,18 +104,6 @@ export const actions = {
 		cookies.delete('game_id');
 		throw redirect(303, '/game');
 	},
-	// attack: async ({ request }) => {
-	// 	try {
-	// 		const data = await request.formData();
-	// 		const { cost, from, damage, to } = Object.fromEntries(data);
-	// 		const to_ref = doc(db, `players/${to}`);
-	// 		const from_ref = doc(db, `players/${from}`);
-	// 		await updateDoc(to_ref, { hp: increment(parseInt(damage.toString()) * -1) });
-	// 		await updateDoc(from_ref, { mp: increment(parseInt(cost.toString()) * -1) });
-	// 	} catch (e) {
-	// 		console.log(e);
-	// 	}
-	// },
 	next_turn: async ({ request }) => {
 		const data = await request.formData();
 		const { game_id, uid } = Object.fromEntries(data);
@@ -158,5 +150,49 @@ export const actions = {
 			});
 		}
 		await deleteDoc(doc(db, `cards_on_hand/${id}`));
+	},
+	cancel_lobby: async ({ cookies, locals }) => {
+		const game_id = cookies.get('game_id');
+
+		if (!game_id) return {};
+
+		const batch = writeBatch(db);
+
+		batch.delete(doc(db, `players/${locals.claims?.uid}`));
+
+		// const cards_snapshot = await getDocs(
+		// 	query(collection(db, 'cards_on_hand'), where('uid', '==', locals.claims?.uid))
+		// );
+
+		// cards_snapshot.docs.forEach((doc) => {
+		// 	batch.delete(doc.ref);
+		// });
+
+		const players_snapshot = await getDocs(
+			query(collection(db, 'players'), where('game_id', '==', game_id))
+		);
+		if (players_snapshot.size === 0) batch.delete(doc(db, `game/${game_id}`));
+
+		await batch.commit();
+
+		cookies.delete('game_id');
+		throw redirect(303, '/game');
+	},
+	forfeit: async ({ request, cookies, locals }) => {
+		const data = await request.formData();
+		const game_id = cookies.get('game_id');
+		const opponent_uid = data.get('opponent_uid')?.toString();
+
+		const batch = writeBatch(db);
+		batch.update(doc(db, `game/${game_id}`), {
+			winner: opponent_uid
+		});
+		batch.delete(doc(db, `players_snapshot/${locals.claims?.uid}`));
+
+		await batch.commit();
+
+		cookies.delete('game_id');
+
+		throw redirect(303, '/game');
 	}
 };
