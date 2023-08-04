@@ -122,7 +122,7 @@ export async function getPlayer(game_id, user_uid) {
 	if (snapshot.size === 0) return null;
 	const doc = snapshot.docs[0];
 	return {
-		id: doc,
+		id: doc.id,
 		...doc.data()
 	};
 }
@@ -142,7 +142,7 @@ export async function getOpponent(game_id, user_uid) {
 	if (snapshot.size === 0) return null;
 	const doc = snapshot.docs[0];
 	return {
-		id: doc,
+		id: doc.id,
 		...doc.data()
 	};
 }

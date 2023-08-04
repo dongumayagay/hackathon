@@ -136,14 +136,8 @@ export const actions = {
 		if (!player) return {};
 
 		const batch = writeBatch(db);
-
 		batch.delete(doc(db, `players/${player.id}`));
-
-		const players_snapshot = await getDocs(
-			query(collection(db, 'players'), where('game_id', '==', game_id))
-		);
-		if (players_snapshot.size === 0) batch.delete(doc(db, `game/${game_id}`));
-
+		batch.delete(doc(db, `game/${game_id}`));
 		await batch.commit();
 
 		cookies.delete('game_id');
