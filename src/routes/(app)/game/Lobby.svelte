@@ -4,7 +4,6 @@
 	import { db } from '$lib/firebase/client';
 	import { onSnapshot, query, collection, where } from 'firebase/firestore';
 	import { onMount } from 'svelte';
-	import QuitGame from './QuitGame.svelte';
 	import ShareGame from './ShareGame.svelte';
 	import Battle from './Battle.svelte';
 	import CancelLobby from './CancelLobby.svelte';

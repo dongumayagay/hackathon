@@ -21,6 +21,6 @@
 >
 	<button class="btn btn-info rounded-full">
 		<img src="/skull.png" alt="google icon" class="h-6 w-6" />create game
-		<span class=" loading-spinner" class:loading />
+		<span class={`loading-spinner  ${loading ? 'loading' : 'hidden'}`} />
 	</button>
 </form>

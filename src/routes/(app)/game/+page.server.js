@@ -177,5 +177,22 @@ export const actions = {
 
 		cookies.delete('game_id');
 		throw redirect(303, '/game');
+	},
+	forfeit: async ({ request, cookies, locals }) => {
+		const data = await request.formData();
+		const game_id = cookies.get('game_id');
+		const opponent_uid = data.get('opponent_uid')?.toString();
+
+		const batch = writeBatch(db);
+		batch.update(doc(db, `game/${game_id}`), {
+			winner: opponent_uid
+		});
+		batch.delete(doc(db, `players_snapshot/${locals.claims?.uid}`));
+
+		await batch.commit();
+
+		cookies.delete('game_id');
+
+		throw redirect(303, '/game');
 	}
 };

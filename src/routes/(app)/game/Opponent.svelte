@@ -5,6 +5,7 @@
 	import { onMount } from 'svelte';
 	import ShowLogs from './ShowLogs.svelte';
 	import { tweened } from 'svelte/motion';
+	import Forfeit from './Forfeit.svelte';
 
 	export let opponent_uid = '';
 	/** @type {any}	 */
@@ -33,5 +34,6 @@
 		</div>
 	</div>
 	<!-- <ShowLogs /> -->
-	<QuitGame />
+	<!-- <QuitGame /> -->
+	<Forfeit {opponent_uid} />
 </section>
