@@ -70,6 +70,10 @@ export const actions = {
 	},
 	join: async ({ cookies, request }) => {
 		const game_id = (await (await request.formData()).get('game_id')?.toString()) ?? '';
+		const snapshot = await getDoc(doc(db, `game/${game_id}`));
+		if (!snapshot.exists()) {
+			return fail(404, { error: "Game doesn't exist" });
+		}
 		cookies.set('game_id', game_id);
 		throw redirect(303, '/game');
 	},

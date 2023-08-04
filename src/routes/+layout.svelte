@@ -5,9 +5,9 @@
 	// export let data;
 </script>
 
-<svlete:head>
-	<title>Hackathon 2023</title>
-</svlete:head>
+<svelte:head>
+	<title>CyberSentries</title>
+</svelte:head>
 
 <slot />
 <Toaster richColors />

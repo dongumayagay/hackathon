@@ -1,4 +1,5 @@
 <script>
+	import QuitGame from './QuitGame.svelte';
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import Opponent from './Opponent.svelte';
@@ -26,14 +27,14 @@
 	});
 </script>
 
-<main class="flex-1 flex flex-col justify-between p-3 pt-0">
+<main class="flex-1 flex flex-col justify-between p-4">
 	<Opponent {opponent_uid} />
 	<!-- <TestAttack
-		bind:mp={players[player_index].mp}
-		to={opponent_uid}
-		from={players[player_index].id}
-		damage={2}
-		cost={1}
-	/> -->
+			bind:mp={players[player_index].mp}
+			to={opponent_uid}
+			from={players[player_index].id}
+			damage={2}
+			cost={1}
+			/> -->
 	<Player {game} {opponent_uid} />
 </main>

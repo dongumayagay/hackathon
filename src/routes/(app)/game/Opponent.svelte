@@ -1,4 +1,5 @@
 <script>
+	import QuitGame from './QuitGame.svelte';
 	import { db } from '$lib/firebase/client';
 	import { doc, onSnapshot } from 'firebase/firestore';
 	import { onMount } from 'svelte';
@@ -28,5 +29,6 @@
 			</ul>
 		</div>
 	</div>
-	<ShowLogs />
+	<!-- <ShowLogs /> -->
+	<QuitGame />
 </section>

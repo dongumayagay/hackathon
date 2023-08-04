@@ -7,8 +7,6 @@
 	export let card;
 	export let opponent_uid = '';
 	let loading = false;
-
-	$: if ($page.form?.error) console.log($page.form.error);
 </script>
 
 <form
@@ -18,8 +16,9 @@
 	class="carousel-item"
 	use:enhance={({}) => {
 		loading = true;
-		return async ({ update }) => {
+		return async ({ update, result }) => {
 			await update();
+			if (result.type === 'failure' && result.data?.error) toast.error(`${result.data?.error}`);
 			loading = false;
 		};
 	}}
