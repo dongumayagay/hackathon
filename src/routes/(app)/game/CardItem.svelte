@@ -7,6 +7,8 @@
 	export let card;
 	export let opponent_uid = '';
 	let loading = false;
+
+	$: if ($page.form?.error) console.log($page.form.error);
 </script>
 
 <form

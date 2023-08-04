@@ -129,9 +129,8 @@ export const actions = {
 		const cost = parseInt(data.get('cost')?.toString() ?? '0');
 		const uid = data.get('uid')?.toString();
 
-		const current_turn = (await getDoc(doc(db, `games/${game_id}`))).data()?.turn ?? null;
-
-		if (current_turn !== uid) return fail(400, { error: 'Not Your Turn Yet' });
+		const current_turn = (await getDoc(doc(db, `game/${game_id}`))).data()?.turn ?? null;
+		if (current_turn != uid) return fail(400, { error: 'Not Your Turn Yet' });
 
 		const player = await getDoc(doc(db, `players/${uid}`));
 		const current_mp = player.data()?.mp ?? 0;
