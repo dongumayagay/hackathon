@@ -18,7 +18,7 @@ export async function load({ locals, cookies }) {
 		);
 
 		// if user is already in game
-		let ids = players_snapshot.docs.map((doc) => doc.id);
+		let ids = players_snapshot.docs.map((doc) => doc.data().uid);
 		if (ids.includes(locals.user.uid)) return { game_id };
 
 		// check if exist
