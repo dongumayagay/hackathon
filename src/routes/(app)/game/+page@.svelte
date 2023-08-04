@@ -1,18 +1,17 @@
 <script>
-	import { game, gameIdStore } from './gamestate.js';
-	import { page } from '$app/stores';
+	// @ts-nocheck
 
+	import { gameIdStore, userIdStore, gameStore } from './gamestate.js';
 	import ShareGame from '$lib/components/ShareGame.svelte';
 	import Battle from '$lib/components/Battle.svelte';
 	import CancelLobby from '$lib/components/CancelLobby.svelte';
 	import { browser } from '$app/environment';
 
-	let players_size = $page.data.players_size;
-	/** @type {string}*/
-	let opponent_uid = $page.data.opponent_uid;
+	export let data;
 
-	$: {
-		console.log('game', $game);
+	$: if (browser) {
+		$gameIdStore = data.game_id;
+		$userIdStore = data.user.uid;
 	}
 </script>
 
@@ -23,8 +22,8 @@
     background-position: center;"
 	class=" flex flex-col min-h-full"
 >
-	{#if $game?.start}
-		<Battle {opponent_uid} />
+	{#if $gameStore?.start}
+		<Battle />
 	{:else}
 		<div
 			class="hero min-h-screen bg-base-200 text-white relative"

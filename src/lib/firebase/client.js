@@ -75,6 +75,7 @@ export async function addPlayer(user, game_id) {
 
 	await setDoc(doc_ref, {
 		game_id,
+		uid: user.uid,
 		photoURL: user.photoURL,
 		displayName: user.displayName,
 		hp: 20,

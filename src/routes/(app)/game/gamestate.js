@@ -1,10 +1,11 @@
 import { browser } from '$app/environment';
 import { db } from '$lib/firebase/client';
 import { playersSnapshotParser } from '$lib/utils';
-import { collection, doc, onSnapshot, query, where } from 'firebase/firestore';
+import { collection, doc, limit, onSnapshot, query, where } from 'firebase/firestore';
 import { derived, writable } from 'svelte/store';
 
 export const gameIdStore = writable(null);
+export const userIdStore = writable(null);
 
 export const gameStore = derived(
 	gameIdStore,
@@ -21,30 +22,43 @@ export const gameStore = derived(
 	null
 );
 
-export const playersStore = derived(
-	gameIdStore,
-	($gameIdStore, set) => {
-		if (!browser && $gameIdStore) return;
+export const playerStore = derived(
+	[gameIdStore, userIdStore],
+	($gameIdStore, $userIdStore, set) => {
+		if (!browser && !$gameIdStore && !$userIdStore) return;
 		const unsub = onSnapshot(
-			query(collection(db, 'players'), where('game_id', '==', $gameIdStore)),
-			(snapshots) => {
-				if (snapshots.size === 0) return;
-				set(playersSnapshotParser(snapshots));
+			query(
+				collection(db, 'players'),
+				where('game_id', '==', $gameIdStore),
+				where('uid', '==', $userIdStore),
+				limit(1)
+			),
+			(snapshot) => {
+				if (snapshot.size === 0) return;
+				set(playersSnapshotParser(snapshot));
 			}
 		);
 		return () => unsub();
 	},
-	[]
+	null
 );
-
-export const game = derived(
-	[gameStore, playersStore],
-	([$gameStore, $playersStore], set) => {
-		set({
-			// @ts-ignore
-			...$gameStore,
-			players: $playersStore
-		});
+export const opponentStore = derived(
+	[gameIdStore, userIdStore],
+	($gameIdStore, $userIdStore, set) => {
+		if (!browser && !$gameIdStore && !$userIdStore) return;
+		const unsub = onSnapshot(
+			query(
+				collection(db, 'players'),
+				where('game_id', '==', $gameIdStore),
+				where('uid', '!=', $userIdStore),
+				limit(1)
+			),
+			(snapshot) => {
+				if (snapshot.size === 0) return;
+				set(playersSnapshotParser(snapshot));
+			}
+		);
+		return () => unsub();
 	},
 	null
 );
