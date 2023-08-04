@@ -77,7 +77,7 @@ export async function addPlayer(user, game_id) {
 		game_id,
 		photoURL: user.photoURL,
 		displayName: user.displayName,
-		hp: 30,
+		hp: 20,
 		mp: 4,
 		max_mp: 10,
 		first: true
