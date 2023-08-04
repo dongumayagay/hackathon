@@ -6,6 +6,7 @@
 	import Player from './Player.svelte';
 	import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
 	import { db } from '$lib/firebase/client';
+	import { toast } from 'svelte-sonner';
 
 	/** @type{any}*/
 	let game;
@@ -22,6 +23,7 @@
 					turn: $page.data.uids[index]
 				});
 			}
+			if (game?.turn && game?.turn === $page.data.user.uid) toast('Its now your turn!');
 		});
 		return () => unsub();
 	});
