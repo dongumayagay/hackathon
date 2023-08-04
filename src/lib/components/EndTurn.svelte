@@ -1,17 +1,13 @@
 <script>
+	import { gameStore } from '$lib/gamestate.js';
 	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
-	/** @type {any}	 */
-	export let game;
-	export let opponent_uid = '';
 </script>
 
 <form action="?/next_turn" method="post" use:enhance>
-	<input type="hidden" name="game_id" value={$page.data.game_id} />
-	<input type="hidden" name="uid" value={opponent_uid} />
-	{#if game?.turn}
-		<button class="btn btn-warning" disabled={game.turn !== $page.data.user.uid}>
-			{game.turn === $page.data.user.uid ? 'End Turn' : "it's your Opponents Turn"}
+	{#if $gameStore?.turn}
+		<button class="btn btn-warning" disabled={$gameStore.turn !== $page.data.user.uid}>
+			{$gameStore.turn === $page.data.user.uid ? 'End Turn' : "it's your Opponents Turn"}
 		</button>
 	{/if}
 </form>

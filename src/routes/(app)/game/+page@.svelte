@@ -1,18 +1,25 @@
 <script>
 	// @ts-nocheck
+	import { playerStore } from '$lib/gamestate.js';
 
-	import { gameIdStore, userIdStore, gameStore } from './gamestate.js';
+	import { gameIdStore, userIdStore, gameStore } from '$lib/gamestate.js';
 	import ShareGame from '$lib/components/ShareGame.svelte';
-	import Battle from '$lib/components/Battle.svelte';
 	import CancelLobby from '$lib/components/CancelLobby.svelte';
 	import { browser } from '$app/environment';
+	import Opponent from '$lib/components/Opponent.svelte';
+	import Player from '$lib/components/Player.svelte';
+	import { onMount } from 'svelte';
 
 	export let data;
 
-	$: if (browser) {
+	// $: if (browser) {
+	// 	$gameIdStore = data.game_id;
+	// 	$userIdStore = data.user.uid;
+	// }
+	onMount(() => {
 		$gameIdStore = data.game_id;
 		$userIdStore = data.user.uid;
-	}
+	});
 </script>
 
 <div
@@ -23,7 +30,11 @@
 	class=" flex flex-col min-h-full"
 >
 	{#if $gameStore?.start}
-		<Battle />
+		<main class="flex-1 flex flex-col justify-between p-4">
+			<Opponent />
+
+			<Player />
+		</main>
 	{:else}
 		<div
 			class="hero min-h-screen bg-base-200 text-white relative"

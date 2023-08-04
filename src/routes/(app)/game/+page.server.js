@@ -1,8 +1,8 @@
-import { addPlayer, db, drawCard } from '$lib/firebase/client';
+import { addPlayer, db, drawCard, getOpponentUID } from '$lib/firebase/client';
 import { collection, deleteDoc, doc, increment, updateDoc, writeBatch } from 'firebase/firestore';
 import { error, redirect, fail } from '@sveltejs/kit';
 import { getDoc, getDocs, query, where } from 'firebase/firestore';
-import { playersSnapshotParser } from '$lib/utils';
+import { generateRandomBoolean } from '$lib/utils';
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ locals, cookies }) {
@@ -17,25 +17,30 @@ export async function load({ locals, cookies }) {
 			query(collection(db, 'players'), where('game_id', '==', game_id))
 		);
 
+		// if user is already in game
+		const ids = players_snapshot.docs.map((doc) => doc.id);
+		if (ids.includes(locals.user.uid)) return { game_id };
+
 		// check if exist
 		if (!game_snapshot.exists()) throw error(404, "Game Lobby doesn't exist");
 		// check if lobby full
 		if (players_snapshot.size >= 2) throw error(403, 'Lobby is full');
 
-		const players = playersSnapshotParser(players_snapshot);
 		const added = await addPlayer(locals.user, game_id);
 
 		// setup game
-		if (players_snapshot.size === 1 && added)
+		if (players_snapshot.size === 1 && added) {
+			const index = generateRandomBoolean(game_id) ? 0 : 1;
 			await updateDoc(game_snapshot.ref, {
-				start: true
+				start: true,
+				turn: ids[index]
 			});
+		}
 
 		cookies.set('game_id', game_id);
 
 		return {
-			game_id,
-			players
+			game_id
 		};
 	} catch (e) {
 		cookies.delete('game_id');
@@ -72,21 +77,22 @@ export const actions = {
 		cookies.delete('game_id');
 		throw redirect(303, '/game');
 	},
-	next_turn: async ({ request }) => {
-		const data = await request.formData();
-		const { game_id, uid } = Object.fromEntries(data);
+	next_turn: async ({ cookies, locals }) => {
+		const game_id = cookies.get('game_id');
+		if (!game_id || !locals.claims?.uid) return {};
+		const opponent_uid = await getOpponentUID(game_id, locals.claims.uid);
 
 		await updateDoc(doc(db, `game/${game_id}`), {
-			turn: uid
+			turn: opponent_uid
 		});
 
-		const oppenent_ref = doc(db, `players/${uid}`);
+		const oppenent_ref = doc(db, `players/${opponent_uid}`);
 		const opponent_snapshot = await getDoc(oppenent_ref);
 		const opponent = opponent_snapshot.data();
 
 		if (opponent?.first) return;
 
-		await drawCard(game_id.toString(), uid.toString());
+		await drawCard(game_id, opponent_uid);
 		const current_mp = opponent?.mp ?? 0;
 		if (current_mp + 2 > 10) await updateDoc(oppenent_ref, { mp: 10 });
 		else await updateDoc(oppenent_ref, { mp: increment(2) });
@@ -143,12 +149,13 @@ export const actions = {
 		cookies.delete('game_id');
 		throw redirect(303, '/game');
 	},
-	forfeit: async ({ request, cookies, locals }) => {
-		const data = await request.formData();
+	forfeit: async ({ cookies, locals }) => {
 		const game_id = cookies.get('game_id');
-		const opponent_uid = data.get('opponent_uid')?.toString();
+		if (!game_id || !locals.claims?.uid) return {};
+		const opponent_uid = await getOpponentUID(game_id, locals.claims.uid);
 
 		const batch = writeBatch(db);
+
 		batch.update(doc(db, `game/${game_id}`), {
 			winner: opponent_uid
 		});

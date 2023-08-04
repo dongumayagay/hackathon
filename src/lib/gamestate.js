@@ -1,12 +1,13 @@
 import { browser } from '$app/environment';
 import { db } from '$lib/firebase/client';
-import { playersSnapshotParser } from '$lib/utils';
 import { collection, doc, limit, onSnapshot, query, where } from 'firebase/firestore';
 import { derived, writable } from 'svelte/store';
 
 export const gameIdStore = writable(null);
 export const userIdStore = writable(null);
 
+/** @type {import('svelte/store').Writable<any>} */
+// @ts-ignore
 export const gameStore = derived(
 	gameIdStore,
 	($gameIdStore, set) => {
@@ -22,9 +23,11 @@ export const gameStore = derived(
 	null
 );
 
+/** @type {import('svelte/store').Writable<any>} */
+// @ts-ignore
 export const playerStore = derived(
 	[gameIdStore, userIdStore],
-	($gameIdStore, $userIdStore, set) => {
+	([$gameIdStore, $userIdStore], set) => {
 		if (!browser && !$gameIdStore && !$userIdStore) return;
 		const unsub = onSnapshot(
 			query(
@@ -35,16 +38,20 @@ export const playerStore = derived(
 			),
 			(snapshot) => {
 				if (snapshot.size === 0) return;
-				set(playersSnapshotParser(snapshot));
+				// @ts-ignore
+				set(snapshot.docs[0].data());
 			}
 		);
 		return () => unsub();
 	},
 	null
 );
+
+/** @type {import('svelte/store').Writable<any>} */
+// @ts-ignore
 export const opponentStore = derived(
 	[gameIdStore, userIdStore],
-	($gameIdStore, $userIdStore, set) => {
+	([$gameIdStore, $userIdStore], set) => {
 		if (!browser && !$gameIdStore && !$userIdStore) return;
 		const unsub = onSnapshot(
 			query(
@@ -55,10 +62,34 @@ export const opponentStore = derived(
 			),
 			(snapshot) => {
 				if (snapshot.size === 0) return;
-				set(playersSnapshotParser(snapshot));
+				// @ts-ignore
+				set(snapshot.docs[0].data());
 			}
 		);
 		return () => unsub();
 	},
 	null
+);
+
+/** @type {import('svelte/store').Writable<any>} */
+// @ts-ignore
+export const playerCardsStore = derived(
+	[gameIdStore, userIdStore],
+	([$gameIdStore, $userIdStore], set) => {
+		if (!browser && !$gameIdStore && !$userIdStore) return;
+		const unsub = onSnapshot(
+			query(
+				collection(db, 'cards_on_hand'),
+				where('game_id', '==', $gameIdStore),
+				where('uid', '==', $userIdStore)
+			),
+			async (snapshot) => {
+				console.log(snapshot.size);
+				// @ts-ignore
+				set(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+			}
+		);
+		return () => unsub();
+	},
+	[]
 );

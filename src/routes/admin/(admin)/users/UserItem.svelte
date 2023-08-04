@@ -8,9 +8,6 @@
 	$: if ($page.form?.success) toast.success($page.form?.message);
 </script>
 
-<!-- <pre>
-    {JSON.stringify(user, null, 2)}
-</pre> -->
 <tr>
 	<th>
 		<div class="flex items-center space-x-3">

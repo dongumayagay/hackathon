@@ -7,6 +7,7 @@ import {
 	getDoc,
 	getDocs,
 	getFirestore,
+	limit,
 	query,
 	setDoc,
 	where,
@@ -136,4 +137,20 @@ export async function pick_first(game_id) {
 		turn: uids[random_index],
 		start: false
 	});
+}
+
+/**
+ * @param {string} game_id
+ * @param {string} user_uid
+ */
+export async function getOpponentUID(game_id, user_uid) {
+	const snapshot = await getDocs(
+		query(
+			collection(db, 'players'),
+			where('game_id', '==', game_id),
+			where('uid', '!=', user_uid),
+			limit(1)
+		)
+	);
+	return snapshot.docs[0].id;
 }
