@@ -1,13 +1,10 @@
 <script>
+	import { page } from '$app/stores';
 	import InGame from './InGame.svelte';
-	import JoinGame from './JoinGame.svelte';
 	import StartMenu from './StartMenu.svelte';
-
-	/** @type {import('./$types').PageData} */
-	export let data;
 </script>
 
-{#if !data?.game_id}
+{#if !$page.data.game_id}
 	<StartMenu />
 {:else}
 	<InGame />
