@@ -1,5 +1,6 @@
 <script>
 	import Navbar from '../Navbar.svelte';
+	import CardLib from './CardLib.svelte';
 	import CreateGame from './CreateGame.svelte';
 	import JoinGame from './JoinGame.svelte';
 </script>
@@ -28,7 +29,7 @@
 			> -->
 			
 			<CreateGame />
-
+			<CardLib />
 			<JoinGame />
 		</div>
 	</div>

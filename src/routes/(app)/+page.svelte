@@ -2,6 +2,7 @@
 	import { google_signin, sign_out } from '$lib/firebase/client';
 	import CreateGameBtn from './CreateGameBtn.svelte';
 	import { page } from '$app/stores';
+	import CardLib from './game/CardLib.svelte';
 
 	/** @type {import('./$types').PageData} */
 	export let data;
@@ -18,6 +19,8 @@
 				<p class="py-6">
 					Your Gateway to Mastering Cybersecurity through an Engaging Card Game Experience
 				</p>
+
+				<CardLib />
 				<button class="btn btn-info rounded-full" on:click={google_signin}>
 					<img src="/skull.png" alt="google icon" class="h-6 w-6" />
 					Login to Play</button
@@ -27,6 +30,8 @@
 					<img src="/google.png" alt="google icon" class="h-6 w-6" />
 					Sign in with Google
 				</button>
+
+				
 			</div>
 		</div>
 	</div>

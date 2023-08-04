@@ -81,7 +81,7 @@
 	</div>
 	{/if}
 	{#if players.length == 2}
-		<main class="flex-1 flex flex-col justify-between p-3 pt-0">
+		<main class="flex-1 flex flex-col justify-between p-3 pt-0 hero min-h-screen" style="background-image: url('/bg.jpg');">
 			<!-- <pre>
 
 				{JSON.stringify(players, null, 2)}
