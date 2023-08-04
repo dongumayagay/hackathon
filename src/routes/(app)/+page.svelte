@@ -1,8 +1,11 @@
 <script>
 	import { google_signin } from '$lib/firebase/client';
 	import { page } from '$app/stores';
-	import CardLib from './game/CardLib.svelte';
-	import CreateGame from './game/CreateGame.svelte';
+	import CardLib from '$lib/components/CardLib.svelte';
+	import CreateGame from '$lib/components/CreateGame.svelte';
+
+	import Navbar from './Navbar.svelte';
+	import JoinGame from '$lib/components/JoinGame.svelte';
 
 	/** @type {import('./$types').PageData} */
 	export let data;
@@ -35,6 +38,7 @@
 		</div>
 	</div>
 {:else}
+	<Navbar />
 	<div
 		class="hero min-h-screen bg-base-200 text-white"
 		style="background-image: url('/banner.jpg');"
@@ -51,18 +55,11 @@
 				<p class="py-6">
 					Your Gateway to Mastering Cybersecurity through an Engaging Card Game Experience
 				</p>
-				<CreateGame />
 
-				<!-- <button class="btn rounded-full" on:click={google_signin} class:hidden={!!$page.data.user}>
-				<img src="/google.png" alt="google icon" class="h-6 w-6" />
-				Sign in with Google
-			</button> -->
+				<CreateGame />
+				<CardLib />
+				<JoinGame />
 			</div>
 		</div>
 	</div>
-	<!-- <main class="h-full p-4">
-		<header class="flex">
-			<CreateGameBtn />
-		</header>
-	</main> -->
 {/if}

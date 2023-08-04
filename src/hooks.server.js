@@ -14,8 +14,8 @@ export async function handle({ event, resolve }) {
 		event.locals.user = null;
 	}
 
-	if (event.url.pathname === '/' && event.locals.user) throw redirect(303, '/game');
-	if (event.url.pathname.startsWith('/game') && !event.locals.user) throw redirect(303, '/');
+	// if (event.url.pathname === '/' && event.locals.user) throw redirect(303, '/game');
+	// if (event.url.pathname.startsWith('/game') && !event.locals.user) throw redirect(303, '/');
 
 	if (event.url.pathname.startsWith('/admin')) {
 		if (!event.locals.claims) throw error(401, 'Unauthorized');

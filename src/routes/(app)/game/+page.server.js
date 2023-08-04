@@ -1,44 +1,41 @@
 import { addPlayer, db, drawCard } from '$lib/firebase/client';
-import {
-	collection,
-	deleteDoc,
-	doc,
-	increment,
-	setDoc,
-	updateDoc,
-	writeBatch
-} from 'firebase/firestore';
+import { collection, deleteDoc, doc, increment, updateDoc, writeBatch } from 'firebase/firestore';
 import { error, redirect, fail } from '@sveltejs/kit';
 import { getDoc, getDocs, query, where } from 'firebase/firestore';
+import { playersSnapshotParser } from '$lib/utils';
 
 /** @type {import('./$types').PageServerLoad} */
-export async function load({ locals, cookies, url }) {
+export async function load({ locals, cookies }) {
 	try {
-		if (!locals.user) throw redirect(303, '/game');
+		// check game id and user
+		const game_id = cookies.get('game_id') ?? null;
+		if (!locals.user || !game_id) throw redirect(303, '/');
 
-		const game_id = url.searchParams.get('game_id') ?? cookies.get('game_id') ?? null;
-
-		if (!game_id) return {};
-
+		// get game and player snapshots
 		const game_snapshot = await getDoc(doc(db, `game/${game_id}`));
-		if (!game_snapshot.exists()) throw error(404, "Game Lobby doesn't exist");
-
 		const players_snapshot = await getDocs(
 			query(collection(db, 'players'), where('game_id', '==', game_id))
 		);
-		const uids = players_snapshot.docs.map((doc) => doc.id);
-		if (!uids.some((uid) => uid === locals.user?.uid) && players_snapshot.size >= 2)
-			throw error(403, 'Lobby is full');
 
-		await addPlayer(locals.user, game_id);
+		// check if exist
+		if (!game_snapshot.exists()) throw error(404, "Game Lobby doesn't exist");
+		// check if lobby full
+		if (players_snapshot.size >= 2) throw error(403, 'Lobby is full');
+
+		const players = playersSnapshotParser(players_snapshot);
+		const added = await addPlayer(locals.user, game_id);
+
+		// setup game
+		if (players_snapshot.size === 1 && added)
+			await updateDoc(game_snapshot.ref, {
+				start: true
+			});
 
 		cookies.set('game_id', game_id);
 
 		return {
 			game_id,
-			uids,
-			opponent_uid: uids.filter((uid) => uid !== locals.user?.uid),
-			players_size: players_snapshot.size === 2
+			players
 		};
 	} catch (e) {
 		cookies.delete('game_id');
@@ -48,35 +45,6 @@ export async function load({ locals, cookies, url }) {
 
 /** @type {import('./$types').Actions} */
 export const actions = {
-	create: async ({ cookies, locals }) => {
-		if (!locals.user) return;
-		try {
-			const game_id = doc(collection(db, 'id')).id;
-
-			await Promise.all([
-				setDoc(doc(db, `game/${game_id}`), {
-					turn: null,
-					winner: null,
-					start: true
-				}),
-				addPlayer(locals.user, game_id)
-			]);
-			cookies.set('game_id', game_id);
-		} catch (e) {
-			console.error(e);
-			return e;
-		}
-		throw redirect(303, '/game');
-	},
-	join: async ({ cookies, request }) => {
-		const game_id = (await (await request.formData()).get('game_id')?.toString()) ?? '';
-		const snapshot = await getDoc(doc(db, `game/${game_id}`));
-		if (!snapshot.exists()) {
-			return fail(404, { error: "Game doesn't exist" });
-		}
-		cookies.set('game_id', game_id);
-		throw redirect(303, '/game');
-	},
 	quit: async ({ cookies, locals }) => {
 		const game_id = cookies.get('game_id');
 
@@ -164,14 +132,6 @@ export const actions = {
 		const batch = writeBatch(db);
 
 		batch.delete(doc(db, `players/${locals.claims?.uid}`));
-
-		// const cards_snapshot = await getDocs(
-		// 	query(collection(db, 'cards_on_hand'), where('uid', '==', locals.claims?.uid))
-		// );
-
-		// cards_snapshot.docs.forEach((doc) => {
-		// 	batch.delete(doc.ref);
-		// });
 
 		const players_snapshot = await getDocs(
 			query(collection(db, 'players'), where('game_id', '==', game_id))

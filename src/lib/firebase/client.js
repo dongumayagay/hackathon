@@ -71,7 +71,7 @@ export async function addPlayer(user, game_id) {
 	const snapshot = await getDoc(doc_ref);
 	const data = snapshot.data();
 	if (snapshot.exists() && data?.game_id !== game_id) await deleteDoc(doc_ref);
-	if (snapshot.exists()) return;
+	if (snapshot.exists()) return false;
 
 	await setDoc(doc_ref, {
 		game_id,
@@ -82,6 +82,8 @@ export async function addPlayer(user, game_id) {
 		max_mp: 10,
 		first: true
 	});
+
+	return true;
 }
 /**
  * @param {string} uid
