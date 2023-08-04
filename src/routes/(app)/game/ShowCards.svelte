@@ -13,11 +13,7 @@
 	let cards_on_hand = [];
 	onMount(() => {
 		const unsub = onSnapshot(
-			query(
-				collection(db, 'cards_on_hand'),
-				where('uid', '==', $page.data.user.uid),
-				where('game_id', '==', $page.data.game_id)
-			),
+			query(collection(db, 'cards_on_hand'), where('uid', '==', $page.data.user.uid)),
 			async (snapshot) => {
 				cards_on_hand = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 			}
