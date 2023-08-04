@@ -100,7 +100,7 @@ export async function removePlayer(uid) {
  * @param {string} uid
  * @param {number} number
  */
-export async function drawCard(game_id, uid, number = 1, first = false) {
+export async function drawCard(game_id, uid, number = 1) {
 	const cards_ref = collection(db, '/cards_on_hand');
 
 	const batch = writeBatch(db);
@@ -115,7 +115,7 @@ export async function drawCard(game_id, uid, number = 1, first = false) {
 			...card
 		});
 	}
-	if (first) batch.update(doc(db, `players/${uid}`), { first: false });
+	// if (first) batch.update(doc(db, `players/${uid}`), { first: false });
 
 	await batch.commit();
 }

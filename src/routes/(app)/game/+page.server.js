@@ -31,10 +31,14 @@ export async function load({ locals, cookies }) {
 		// setup game
 		if (players_snapshot.size === 1 && added) {
 			const index = generateRandomBoolean(game_id) ? 0 : 1;
-			await updateDoc(game_snapshot.ref, {
-				start: true,
-				turn: ids[index]
-			});
+			await Promise.all([
+				drawCard(game_id, ids[0]),
+				drawCard(game_id, ids[1]),
+				updateDoc(game_snapshot.ref, {
+					start: true,
+					turn: ids[index]
+				})
+			]);
 		}
 
 		cookies.set('game_id', game_id);
