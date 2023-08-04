@@ -37,9 +37,9 @@ export const playerStore = derived(
 				limit(1)
 			),
 			(snapshot) => {
-				if (snapshot.size === 0) return;
+				const doc = snapshot.docs[0];
 				// @ts-ignore
-				set(snapshot.docs[0].data());
+				set({ id: doc.id, ...doc.data() });
 			}
 		);
 		return () => unsub();
@@ -85,9 +85,8 @@ export const playerCardsStore = derived(
 				where('uid', '==', $userIdStore)
 			),
 			async (snapshot) => {
-				const doc = snapshot.docs[0];
 				// @ts-ignore
-				set({ id: doc.id, ...doc.data() });
+				set(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
 			}
 		);
 		return () => unsub();
