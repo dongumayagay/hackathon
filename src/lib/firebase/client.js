@@ -1,6 +1,17 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
-import { collection, deleteDoc, doc, getFirestore, setDoc, writeBatch } from 'firebase/firestore';
+import {
+	collection,
+	deleteDoc,
+	doc,
+	getDoc,
+	getDocs,
+	getFirestore,
+	query,
+	setDoc,
+	where,
+	writeBatch
+} from 'firebase/firestore';
 import {
 	getAuth,
 	setPersistence,
@@ -13,6 +24,7 @@ import {
 import { getDatabase } from 'firebase/database';
 import { invalidateAll } from '$app/navigation';
 import cards from '$lib/cards';
+import { generateRandomBoolean } from '$lib/utils';
 // import { getAnalytics } from 'firebase/analytics';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -101,4 +113,23 @@ export async function drawCard(game_id, uid, number = 1, first = false) {
 	if (first) batch.update(doc(db, `players/${uid}`), { first: false });
 
 	await batch.commit();
+}
+
+/** @param {string} game_id */
+export async function pick_first(game_id) {
+	const game_snapshot = await getDoc(doc(db, `game/${game_id}`));
+	const game_data = game_snapshot.data();
+	if (!game_data?.start) return {};
+
+	const players_snapshot = await getDocs(
+		query(collection(db, 'players'), where('game_id', '==', game_id))
+	);
+	const uids = players_snapshot.docs.map((doc) => doc.id);
+
+	const random_index = generateRandomBoolean(game_id) ? 0 : 1;
+
+	await setDoc(doc(db, `game/${game_id}`), {
+		turn: uids[random_index],
+		start: false
+	});
 }

@@ -5,7 +5,7 @@
 	import Opponent from './Opponent.svelte';
 	import Player from './Player.svelte';
 	import { doc, onSnapshot, updateDoc, writeBatch } from 'firebase/firestore';
-	import { db } from '$lib/firebase/client';
+	import { db, pick_first } from '$lib/firebase/client';
 	import { toast } from 'svelte-sonner';
 
 	/** @type{any}*/
@@ -17,16 +17,8 @@
 		const doc_ref = doc(db, `game/${$page.data.game_id}`);
 		const unsub = onSnapshot(doc_ref, async (snapshot) => {
 			game = snapshot.data();
-			if (!game.turn) {
-				const index = Math.random() >= 0.5 ? 0 : 1;
-				const batch = writeBatch(db);
-				// await updateDoc();
-				batch.update(doc_ref, {
-					turn: $page.data.uids[index]
-				});
-				batch.commit();
-			}
-			if (game?.turn && game?.turn === $page.data.user.uid) toast('Its now your turn!');
+			if (game.turn === null && game.start) await pick_first($page.data.game_id);
+			if (game.turn !== null && game.turn === $page.data.user.uid) toast('Its now your turn!');
 		});
 		return () => unsub();
 	});

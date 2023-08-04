@@ -26,7 +26,6 @@ export async function load({ locals, cookies, url }) {
 		const players_snapshot = await getDocs(
 			query(collection(db, 'players'), where('game_id', '==', game_id))
 		);
-
 		const uids = players_snapshot.docs.map((doc) => doc.id);
 		if (!uids.some((uid) => uid === locals.user?.uid) && players_snapshot.size >= 2)
 			throw error(403, 'Lobby is full');
@@ -57,7 +56,8 @@ export const actions = {
 			await Promise.all([
 				setDoc(doc(db, `game/${game_id}`), {
 					turn: null,
-					winner: null
+					winner: null,
+					start: true
 				}),
 				addPlayer(locals.user, game_id)
 			]);
