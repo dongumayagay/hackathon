@@ -1,11 +1,12 @@
 <script>
+	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
 	/** @type {any}	 */
 	export let game;
 	export let opponent_uid = '';
 </script>
 
-<form action="?/end_turn" method="post">
+<form action="?/next_turn" method="post" use:enhance>
 	<input type="hidden" name="game_id" value={$page.data.game_id} />
 	<input type="hidden" name="uid" value={opponent_uid} />
 	{#if game?.turn}
