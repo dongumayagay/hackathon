@@ -27,19 +27,32 @@
 </script>
 
 <div
-	style="height:100dvh;"
-	class=" flex flex-col bg-gradient-to-t from-green-950/20 via-transparent"
+	style="height:100dvh; background-image: url('/Background.jpg');  display: grid;
+    width: 100%;
+    background-size: cover;
+    background-position: center;"
+	class=" flex flex-col min-h-full"
 >
-	<header class="flex p-4 justify-between w-full">
-		<GameId />
-		<QuitGame />
-	</header>
+
 
 	{#if enter_battle}
 		<Battle {opponent_uid} />
 	{:else}
-		<div class="h-full relative">
-			<h1 class="text-2xl top-1/3 -translate-x-1/2 left-1/2 absolute">Waiting for Opponent...</h1>
+		<div class="hero min-h-screen bg-base-200 text-white" style="background-image: url('/bg.jpg');">
+	
+		<div class="hero-overlay bg-zinc-900/70"></div>
+		<div class="hero-content text-center flex flex-col">
+			<h1 class="text-3xl font-bold text-center">Waiting for Player 2...</h1>
+			<div class="max-w-md flex flex-col gap-4">
+				
+				<GameId />
+	
+			</div>
 		</div>
+	</div>
+		<!-- <div class="h-full relative">
+			<h1 class="text-2xl top-1/3 -translate-x-1/2 left-1/2 absolute">Waiting for Opponent...</h1>
+			<GameId />
+		</div> -->
 	{/if}
 </div>
