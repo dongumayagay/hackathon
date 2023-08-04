@@ -189,6 +189,13 @@ export const actions = {
 		});
 		batch.delete(doc(db, `players_snapshot/${locals.claims?.uid}`));
 
+		const cards_snapshot = await getDocs(
+			query(collection(db, 'cards_on_hand'), where('uid', '==', locals.claims?.uid))
+		);
+		cards_snapshot.docs.forEach((doc) => {
+			batch.delete(doc.ref);
+		});
+
 		await batch.commit();
 
 		cookies.delete('game_id');
