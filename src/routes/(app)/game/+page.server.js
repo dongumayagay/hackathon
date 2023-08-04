@@ -54,33 +54,6 @@ export async function load({ locals, cookies }) {
 
 /** @type {import('./$types').Actions} */
 export const actions = {
-	quit: async ({ cookies, locals }) => {
-		const game_id = cookies.get('game_id');
-
-		if (!game_id) return {};
-
-		const batch = writeBatch(db);
-
-		batch.delete(doc(db, `players/${locals.claims?.uid}`));
-
-		const cards_snapshot = await getDocs(
-			query(collection(db, 'playerCards'), where('uid', '==', locals.claims?.uid))
-		);
-
-		cards_snapshot.docs.forEach((doc) => {
-			batch.delete(doc.ref);
-		});
-
-		const players_snapshot = await getDocs(
-			query(collection(db, 'players'), where('game_id', '==', game_id))
-		);
-		if (players_snapshot.size === 0) batch.delete(doc(db, `game/${game_id}`));
-
-		await batch.commit();
-
-		cookies.delete('game_id');
-		throw redirect(303, '/game');
-	},
 	next_turn: async ({ cookies, locals }) => {
 		const game_id = cookies.get('game_id');
 		if (!game_id || !locals.claims?.uid) return {};
