@@ -1,31 +1,61 @@
 <script>
-	import { google_signin } from '$lib/firebase/client';
+	import { google_signin, sign_out } from '$lib/firebase/client';
 	import CreateGameBtn from './CreateGameBtn.svelte';
+	import { page } from '$app/stores';
+	import CardLib from './game/CardLib.svelte';
 
 	/** @type {import('./$types').PageData} */
 	export let data;
 </script>
 
+
 {#if !data.user}
-	<div class="hero min-h-screen bg-base-200">
-		<div class="hero-content text-center">
-			<div class="max-w-md">
-				<h1 class="text-5xl font-bold">Hello there</h1>
+
+	<div class="hero min-h-screen bg-base-200 text-white" style="background-image: url('/banner.jpg');">
+		<div class="hero-overlay bg-zinc-900/70"></div>
+		<div class="hero-content text-center flex flex-col">
+			<h1 class="text-8xl font-bold italic text-center">CyberSentries</h1>
+			<div class="max-w-md flex flex-col gap-4">
 				<p class="py-6">
-					Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi
-					exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.
+					Your Gateway to Mastering Cybersecurity through an Engaging Card Game Experience
 				</p>
-				<button class="btn btn-accent" on:click={google_signin}>
-					<img src="/google.png" alt="google icon" class="h-6 w-6" />
+
+				<CardLib />
+				<button class="btn btn-info rounded-full" on:click={google_signin}>
+					<img src="/skull.png" alt="google icon" class="h-6 w-6" />
 					Login to Play</button
 				>
+
+				<button class="btn rounded-full" on:click={google_signin} class:hidden={!!$page.data.user}>
+					<img src="/google.png" alt="google icon" class="h-6 w-6" />
+					Sign in with Google
+				</button>
+
+				
 			</div>
 		</div>
 	</div>
 {:else}
-	<main class="h-full p-4">
+<div class="hero min-h-screen bg-base-200 text-white" style="background-image: url('/banner.jpg');">
+	<div class="hero-overlay bg-zinc-900/70"></div>
+	<div class="hero-content text-center flex flex-col">
+		<h1 class="text-8xl font-bold italic text-center" style="text-shadow: 0 0 5px rgba(0, 0, 255, 0.7), 0 0 10px rgba(0, 0, 255, 0.7), 0 0 15px rgba(0, 0, 255, 0.7); animation: glowing 2s infinite;">CyberSentries</h1>
+		<div class="max-w-md flex flex-col gap-4">
+			<p class="py-6">
+				Your Gateway to Mastering Cybersecurity through an Engaging Card Game Experience
+			</p>
+			<CreateGameBtn />
+
+			<!-- <button class="btn rounded-full" on:click={google_signin} class:hidden={!!$page.data.user}>
+				<img src="/google.png" alt="google icon" class="h-6 w-6" />
+				Sign in with Google
+			</button> -->
+		</div>
+	</div>
+</div>
+	<!-- <main class="h-full p-4">
 		<header class="flex">
 			<CreateGameBtn />
 		</header>
-	</main>
+	</main> -->
 {/if}

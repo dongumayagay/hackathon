@@ -12,7 +12,7 @@
 </script>
 
 <main class="flex items-center gap-2 group">
-	<div class="tooltip tooltip-bottom text-xs text-white" data-tip="copy game id">
+	<div class="tooltip tooltip-bottom text-sm text-white" data-tip="copy game id">
 		<button on:click={() => copy_id($page.data.game_id)}>
 			ID: {$page.data.game_id}
 		</button>
