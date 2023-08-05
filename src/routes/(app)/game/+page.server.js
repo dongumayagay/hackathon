@@ -18,11 +18,11 @@ export async function load({ locals, cookies }) {
 		);
 
 		// if user is already in game
-		let ids = players_snapshot.docs.map((doc) => doc.data().uid);
-		if (ids.includes(locals.user.uid)) return { game_id };
+		let uids = players_snapshot.docs.map((doc) => doc.data().uid);
+		if (uids.includes(locals.user.uid)) return { game_id };
 
 		// check if exist
-		if (!game_snapshot.exists()) throw error(404, "Game Lobby doesn't exist");
+		if (!game_snapshot.exists()) throuw error(404, "Game Lobby doesn't exist");
 		// check if lobby full
 		if (players_snapshot.size >= 2) throw error(403, 'Lobby is full');
 
@@ -30,7 +30,8 @@ export async function load({ locals, cookies }) {
 
 		// setup game
 		if (players_snapshot.size === 1 && added) {
-			ids.push(locals.claims?.uid ?? '');
+			const snapshot = await getDocs(query(collection(db,'players'),where('game_id','==',game_id)))
+			const ids = snapshot.docs.map(doc=>doc.id)
 			const index = generateRandomBoolean(game_id) ? 0 : 1;
 
 			await Promise.all([
