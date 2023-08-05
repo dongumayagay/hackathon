@@ -37,8 +37,8 @@ export async function load({ locals, cookies }) {
 			const index = generateRandomBoolean(game_id) ? 0 : 1;
 
 			await Promise.all([
-				drawCard(game_id, ids[0], 5),
-				drawCard(game_id, ids[1], 5),
+				drawCard(game_id, uids[0], 5),
+				drawCard(game_id, uids[1], 5),
 				updateDoc(game_snapshot.ref, {
 					start: true,
 					turn: ids[index]
