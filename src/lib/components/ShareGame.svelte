@@ -12,7 +12,7 @@
 </script>
 
 <main class="flex items-center">
-	<!-- <div class="tooltip tooltip-bottom text-sm text-white" data-tip="copy share link">
+	<div class="tooltip tooltip-bottom text-sm text-white" data-tip="copy share link">
 		<button
 			class="btn btn-ghost btn-circle btn-sm"
 			on:click={() => copy_id(`${$page.url.href}?game_id=${$page.data.game_id}`)}
@@ -28,7 +28,7 @@
 				/>
 			</svg>
 		</button>
-	</div> -->
+	</div>
 	<div class="tooltip tooltip-bottom text-sm text-white" data-tip="copy game id">
 		<button class="btn btn-sm btn-ghost group" on:click={() => copy_id($page.data.game_id)}>
 			ID: {$page.data.game_id}

@@ -18,7 +18,7 @@ export async function load({ url, cookies, locals }) {
 
 	// if there is join url
 	const join_game_id = url.searchParams.get('join');
-	if (join_game_id && locals) {
+	if (join_game_id && locals.user) {
 		// redirect if good
 		cookies.set('game_id', join_game_id);
 		throw redirect(300, '/game');
