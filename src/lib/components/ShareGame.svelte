@@ -15,7 +15,7 @@
 	<div class="tooltip tooltip-bottom text-sm text-white" data-tip="copy share link">
 		<button
 			class="btn btn-ghost btn-circle btn-sm"
-			on:click={() => copy_id(`${$page.url.href}?game_id=${$page.data.game_id}`)}
+			on:click={() => copy_id(`${$page.url.origin}?join=${$page.data.game_id}`)}
 		>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
