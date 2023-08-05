@@ -1,8 +1,6 @@
 <script>
 	import { enhance } from '$app/forms';
-	import { toast } from 'svelte-sonner';
 
-	export let opponent_uid = '';
 	/** @type {HTMLDialogElement} */
 	let forfeit_modal;
 
@@ -43,7 +41,6 @@
 					};
 				}}
 			>
-				<input type="hidden" name="opponent_uid" value={opponent_uid} />
 				<button class="btn btn-error" disabled={loading}>
 					<span class={`loading-spinner  ${loading ? 'loading' : 'hidden'}`} />
 					yes
