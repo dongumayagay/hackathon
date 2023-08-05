@@ -86,10 +86,10 @@ export const actions = {
 			if (current_mp + 2 > 10) batch.update(oppenent_ref, { mp: 10 });
 			else batch.update(oppenent_ref, { mp: increment(2) });
 			// @ts-ignore
+			await drawCard(game_id, opponent.uid);
 		}
 		await batch.commit();
 		// @ts-ignore
-		if (!opponent?.first) await drawCard(game_id, opponent.id);
 	},
 	use_card: async ({ request, locals, cookies }) => {
 		const data = await request.formData();

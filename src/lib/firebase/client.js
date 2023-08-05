@@ -93,7 +93,6 @@ export async function drawCard(game_id, uid, number = 1) {
 	for (let i = 0; i < number; i++) {
 		const randomIndex = Math.floor(Math.random() * cards.length);
 		const card = cards[randomIndex];
-
 		const doc_ref = doc(cards_ref);
 		batch.set(doc_ref, {
 			uid,
@@ -104,6 +103,7 @@ export async function drawCard(game_id, uid, number = 1) {
 	// if (first) batch.update(doc(db, `players/${uid}`), { first: false });
 
 	await batch.commit();
+	console.log('card added');
 }
 
 /**
