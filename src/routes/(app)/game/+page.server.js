@@ -34,6 +34,7 @@ export async function load({ locals, cookies }) {
 				query(collection(db, 'players'), where('game_id', '==', game_id))
 			);
 			const ids = snapshot.docs.map((doc) => doc.id);
+			const uids = snapshot.docs.map((doc) => doc.data().uid);
 			const index = generateRandomBoolean(game_id) ? 0 : 1;
 
 			await Promise.all([
