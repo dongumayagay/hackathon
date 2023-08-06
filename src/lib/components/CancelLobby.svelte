@@ -1,5 +1,6 @@
 <script>
 	import { enhance } from '$app/forms';
+	import { goto } from '$app/navigation';
 	let loading = false;
 </script>
 
@@ -8,8 +9,9 @@
 	method="POST"
 	use:enhance={({}) => {
 		loading = true;
-		return async ({ update }) => {
+		return async ({ update, result }) => {
 			await update();
+			if (result.type === 'redirect') await goto(result.location);
 			loading = false;
 		};
 	}}

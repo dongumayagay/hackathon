@@ -41,7 +41,7 @@ export async function load({ locals, cookies, url }) {
 				drawCard(game_id, players[0].uid, 5),
 				drawCard(game_id, players[1].uid, 5),
 				updateDoc(game_snapshot.ref, {
-					phase: 'start',
+					phase: 'playing',
 					turn: players[index].id
 				})
 			]);
@@ -145,7 +145,7 @@ export const actions = {
 		await batch.commit();
 
 		cookies.delete('game_id');
-		throw redirect(303, '/game');
+		throw redirect(303, '/');
 	},
 	forfeit: async ({ cookies, locals }) => {
 		const game_id = cookies.get('game_id');

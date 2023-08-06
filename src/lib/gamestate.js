@@ -13,8 +13,10 @@ export const gameStore = derived(
 	($gameIdStore, set) => {
 		if (!browser && $gameIdStore) return;
 		const unsub = onSnapshot(doc(db, `game/${$gameIdStore}`), (snapshot) => {
-			if (!snapshot.exists()) return;
-
+			if (!snapshot.exists()) {
+				set(null);
+				return;
+			}
 			// @ts-ignore
 			set({ id: snapshot.id, ...snapshot.data() });
 		});
@@ -37,6 +39,10 @@ export const playerStore = derived(
 				limit(1)
 			),
 			(snapshot) => {
+				if (snapshot.size === 0) {
+					set(null);
+					return;
+				}
 				const doc = snapshot.docs[0];
 				// @ts-ignore
 				set({ id: doc.id, ...doc.data() });
@@ -61,7 +67,10 @@ export const opponentStore = derived(
 				limit(1)
 			),
 			(snapshot) => {
-				if (snapshot.size === 0) return;
+				if (snapshot.size === 0) {
+					set(null);
+					return;
+				}
 				const doc = snapshot.docs[0];
 				// @ts-ignore
 				set({ id: doc.id, ...doc.data() });

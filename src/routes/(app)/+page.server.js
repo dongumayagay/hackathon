@@ -37,7 +37,7 @@ export const actions = {
 					turn: null,
 					winner: null,
 					full: false,
-					phase: 'wait'
+					phase: 'waiting'
 				}),
 				addPlayer(locals.user, game_id)
 			]);
