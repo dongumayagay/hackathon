@@ -64,10 +64,10 @@ export async function sign_out() {
  * @param {string} game_id
  */
 export async function addPlayer(user, game_id) {
-	const player = await getPlayer(game_id, user.uid);
-	if (player) return false;
+	const check_player = await getPlayer(game_id, user.uid);
+	if (check_player) return null;
 
-	await addDoc(collection(db, 'players'), {
+	const new_player = {
 		game_id,
 		uid: user.uid,
 		photoURL: user.photoURL,
@@ -76,9 +76,11 @@ export async function addPlayer(user, game_id) {
 		mp: 4,
 		max_mp: 10,
 		first: true
-	});
+	};
 
-	return true;
+	const doc_ref = await addDoc(collection(db, 'players'), new_player);
+
+	return { id: doc_ref.id, ...new_player };
 }
 
 /**
@@ -100,10 +102,8 @@ export async function drawCard(game_id, uid, number = 1) {
 			...card
 		});
 	}
-	// if (first) batch.update(doc(db, `players/${uid}`), { first: false });
 
 	await batch.commit();
-	console.log('card added');
 }
 
 /**

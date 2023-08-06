@@ -5,11 +5,11 @@ import { getDoc, getDocs, query, where } from 'firebase/firestore';
 import { generateRandomBoolean } from '$lib/utils';
 
 /** @type {import('./$types').PageServerLoad} */
-export async function load({ locals, cookies }) {
+export async function load({ locals, cookies, url }) {
 	try {
 		// check game id and user
-		const game_id = cookies.get('game_id') ?? null;
-		if (!locals.user || !game_id) throw redirect(303, '/');
+		const game_id = url.searchParams.get('join') ?? cookies.get('game_id') ?? null;
+		if (!locals.user?.uid || !game_id) throw redirect(303, '/');
 
 		// get game and player snapshots
 		const game_snapshot = await getDoc(doc(db, `game/${game_id}`));
@@ -17,32 +17,32 @@ export async function load({ locals, cookies }) {
 			query(collection(db, 'players'), where('game_id', '==', game_id))
 		);
 
-		// if user is already in game
-		let uids = players_snapshot.docs.map((doc) => doc.data().uid);
-		if (uids.includes(locals.user.uid)) return { game_id };
+		/** @type {any} */
+		let players = players_snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+
+		// check if user is already in game
+		// @ts-ignore
+		if (players.some((player) => player.uid === locals.user.uid)) return { game_id };
 
 		// check if exist
 		if (!game_snapshot.exists()) throw error(404, "Game Lobby doesn't exist");
 		// check if lobby full
 		if (players_snapshot.size >= 2) throw error(403, 'Lobby is full');
 
-		const added = await addPlayer(locals.user, game_id);
+		const new_player = await addPlayer(locals.user, game_id);
 
 		// setup game
-		if (players_snapshot.size === 1 && added) {
-			const snapshot = await getDocs(
-				query(collection(db, 'players'), where('game_id', '==', game_id))
-			);
-			const ids = snapshot.docs.map((doc) => doc.id);
-			const uids = snapshot.docs.map((doc) => doc.data().uid);
+		if (players_snapshot.size === 1 && new_player) {
+			players.push(new_player);
+
 			const index = generateRandomBoolean(game_id) ? 0 : 1;
 
 			await Promise.all([
-				drawCard(game_id, uids[0], 5),
-				drawCard(game_id, uids[1], 5),
+				drawCard(game_id, players[0].uid, 5),
+				drawCard(game_id, players[1].uid, 5),
 				updateDoc(game_snapshot.ref, {
 					start: true,
-					turn: ids[index]
+					turn: players[index].id
 				})
 			]);
 		}
