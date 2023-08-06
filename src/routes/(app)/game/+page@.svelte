@@ -35,7 +35,7 @@
 
 			<Player />
 		</main>
-	{:else if $gameStore.phase === 'wait'}
+	{:else if $gameStore?.phase === 'wait'}
 		<div
 			class="hero min-h-screen bg-base-200 text-white relative"
 			style="background-image: url('/bg.jpg');"
