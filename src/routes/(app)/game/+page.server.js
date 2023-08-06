@@ -41,7 +41,7 @@ export async function load({ locals, cookies, url }) {
 				drawCard(game_id, players[0].uid, 5),
 				drawCard(game_id, players[1].uid, 5),
 				updateDoc(game_snapshot.ref, {
-					start: true,
+					phase: 'start',
 					turn: players[index].id
 				})
 			]);

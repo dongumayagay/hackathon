@@ -29,13 +29,13 @@
     background-position: center;"
 	class=" flex flex-col min-h-full"
 >
-	{#if $gameStore?.start}
+	{#if $gameStore?.phase === 'start'}
 		<main class="flex-1 flex flex-col justify-between p-4">
 			<Opponent />
 
 			<Player />
 		</main>
-	{:else}
+	{:else if $gameStore.phase === 'wait'}
 		<div
 			class="hero min-h-screen bg-base-200 text-white relative"
 			style="background-image: url('/bg.jpg');"
@@ -49,5 +49,7 @@
 				</div>
 			</div>
 		</div>
+	{:else}
+		<!--  -->
 	{/if}
 </div>

@@ -36,8 +36,8 @@ export const actions = {
 				setDoc(doc(db, `game/${game_id}`), {
 					turn: null,
 					winner: null,
-					start: false,
-					full: false
+					full: false,
+					phase: 'wait'
 				}),
 				addPlayer(locals.user, game_id)
 			]);
