@@ -50,6 +50,14 @@
 			</div>
 		</div>
 	{:else}
-		<!--  -->
+		<div
+			class="hero min-h-screen bg-base-200 text-white relative"
+			style="background-image: url('/bg.jpg');"
+		>
+			<div class="hero-overlay bg-zinc-900/70" />
+			<div class="hero-content text-center flex flex-col">
+				<h1 class="text-3xl font-bold text-center">Game Loading...</h1>
+			</div>
+		</div>
 	{/if}
 </div>
