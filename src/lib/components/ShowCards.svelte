@@ -9,7 +9,7 @@
 <button on:click={() => show_cards_modal.showModal()} class="stack">
 	{#each { length: 3 } as _}
 		<div class={`relative `}>
-			<img src="/cards/Back_Card.png" alt="" class="h-36 sm:h-48" />
+			<img src="/cards/Back_Card.png" alt="" class="h-24 sm:h-36" />
 		</div>
 	{/each}
 </button>

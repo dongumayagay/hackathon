@@ -7,6 +7,8 @@
 	import { browser } from '$app/environment';
 	import Opponent from '$lib/components/Opponent.svelte';
 	import Player from '$lib/components/Player.svelte';
+	import CardPlayed from '$lib/components/CardPlayed.svelte';
+	
 
 	export let data;
 
@@ -90,9 +92,12 @@
     background-position: center; display:grid"
 	class:hidden={!$gameStore?.phase === 'playing' || !$gameStore?.phase === 'finished'}
 >
-	<main class="flex-1 flex flex-col justify-between p-4">
-		<Opponent />
+	<CardPlayed />
+	<main class="flex-1 flex flex-col justify-between p-4 z-10">
+		
 
+		<Opponent />
+		
 		<Player />
 	</main>
 </div>

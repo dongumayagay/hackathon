@@ -1,5 +1,5 @@
 import { addPlayer, db, drawCard, getOpponent, getPlayer } from '$lib/firebase/client';
-import { collection, deleteDoc, doc, increment, updateDoc, writeBatch } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, increment, updateDoc, writeBatch } from 'firebase/firestore';
 import { error, redirect, fail } from '@sveltejs/kit';
 import { getDoc, getDocs, query, where } from 'firebase/firestore';
 import { generateRandomBoolean } from '$lib/utils';
@@ -131,6 +131,17 @@ export const actions = {
 				hp: increment(parseInt(security.toString()))
 			});
 		}
+
+		//adding the card to recent cards played
+		const card_snapshot = await getDoc(doc(db, `playerCards/${id}`));
+		if (card_snapshot.exists()) {
+			const card = card_snapshot.data();
+			const currentDate = new Date();
+	     	card.dateAdded = currentDate;
+
+			await addDoc(collection(db,'cardsPlayed'),card);
+		}
+
 		await deleteDoc(doc(db, `playerCards/${id}`));
 	},
 	cancel_lobby: async ({ cookies, locals }) => {
