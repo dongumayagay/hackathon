@@ -60,7 +60,7 @@
 </div> -->
 
 <div
-	class="hero min-h-screen bg-base-200 text-white relative"
+	class="hero min-h-screen bg-base-200 text-white relative z-10"
 	style="background-image: url('/bg.jpg');"
 	class:hidden={$gameStore?.phase === 'playing' || $gameStore?.phase === 'finished'}
 >
